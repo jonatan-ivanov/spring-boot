@@ -50,7 +50,11 @@ dependencies {
 	}
 	optional("io.zipkin.brave:brave-context-slf4j")
 	optional("io.zipkin.brave:brave-instrumentation-http")
-	optional("com.wavefront:wavefront-spring-boot") // This must be removed - I'm adding it for demo purposes
+	optional("io.zipkin.aws:brave-propagation-aws")
+	optional("com.wavefront:wavefront-spring-boot") {
+		exclude group: "org.springframework"
+		exclude group: "org.springframework.boot"
+	} // This must be removed - I'm adding it for demo purposes
 	optional("io.micrometer:micrometer-registry-wavefront")
 
 	optional("jakarta.jms:jakarta.jms-api")

@@ -27,7 +27,7 @@ import brave.sampler.Sampler;
  * You can read more about it in {@link brave.sampler.RateLimitingSampler}
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class RateLimitingSampler extends Sampler {
 

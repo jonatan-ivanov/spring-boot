@@ -22,7 +22,7 @@ import brave.propagation.Propagation;
  * Provides logic for supplying of a {@link Propagation.Factory}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public interface PropagationFactorySupplier {
 

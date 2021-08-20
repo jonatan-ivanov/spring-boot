@@ -30,7 +30,7 @@ import org.springframework.core.observability.tracing.TraceContext;
  * Brave implementation of a {@link BaggageManager}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BraveBaggageManager implements Closeable, BaggageManager {
 

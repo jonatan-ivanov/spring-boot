@@ -30,7 +30,7 @@ import org.springframework.core.observability.tracing.propagation.Propagator;
  * Brave implementation of a {@link Propagator}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BravePropagator implements Propagator {
 

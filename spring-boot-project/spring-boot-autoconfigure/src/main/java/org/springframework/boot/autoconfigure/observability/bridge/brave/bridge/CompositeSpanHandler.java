@@ -30,7 +30,7 @@ import org.springframework.core.observability.tracing.exporter.SpanReporter;
  * Merges {@link SpanFilter}s and {@link SpanReporter}s into a {@link SpanHandler}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class CompositeSpanHandler extends SpanHandler {
 

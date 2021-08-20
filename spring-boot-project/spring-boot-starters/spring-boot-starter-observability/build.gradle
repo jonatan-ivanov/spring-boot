@@ -1,0 +1,18 @@
+plugins {
+	id "org.springframework.boot.starter"
+}
+
+description = "Starter for building observable applications"
+
+dependencies {
+	api(project(":spring-boot-project:spring-boot-starters:spring-boot-starter"))
+	api("io.zipkin.brave:brave") {
+		exclude group: "io.zipkin.reporter2"
+		exclude group: "io.zipkin.zipkin2"
+	}
+	api("io.zipkin.brave:brave-context-slf4j")
+	api("io.zipkin.brave:brave-instrumentation-http")
+	api("io.zipkin.aws:brave-propagation-aws")
+	api("io.zipkin.reporter2:zipkin-reporter-brave")
+	api("io.micrometer:micrometer-registry-prometheus")
+}

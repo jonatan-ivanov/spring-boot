@@ -27,7 +27,7 @@ import org.springframework.core.observability.transport.http.HttpServerResponse;
  * Brave implementation of a {@link HttpServerResponse}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveHttpServerResponse implements HttpServerResponse {
 

@@ -23,8 +23,8 @@ import javax.servlet.DispatcherType;
 import io.micrometer.core.instrument.config.MeterFilter;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
-import org.springframework.boot.actuate.autoconfigure.metrics.OnlyOnceLoggingDenyMeterFilter;
+//import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
+//import org.springframework.boot.actuate.autoconfigure.metrics.OnlyOnceLoggingDenyMeterFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -44,16 +44,16 @@ import org.springframework.web.servlet.mvc.observability.WebMvcTagsProvider;
 @Configuration(proxyBeanMethods = false)
 class ObservabilityServletInstrumentationConfiguration {
 
-	private final MetricsProperties properties;
+//	private final MetricsProperties properties;
 
-	public ObservabilityServletInstrumentationConfiguration(MetricsProperties properties) {
-		this.properties = properties;
-	}
+//	public ObservabilityServletInstrumentationConfiguration(MetricsProperties properties) {
+//		this.properties = properties;
+//	}
 
 	@Bean
 	@ConditionalOnMissingBean(WebMvcTagsProvider.class)
 	public DefaultWebMvcTagsProvider webMvcTagsProvider(ObjectProvider<WebMvcTagsContributor> contributors) {
-		return new DefaultWebMvcTagsProvider(this.properties.getWeb().getServer().getRequest().isIgnoreTrailingSlash(),
+		return new DefaultWebMvcTagsProvider(true,
 				contributors.orderedStream().collect(Collectors.toList()));
 	}
 
@@ -69,7 +69,7 @@ class ObservabilityServletInstrumentationConfiguration {
 		return registration;
 	}
 
-	@Bean
+	/*@Bean
 	@Order(0)
 	public MeterFilter metricsHttpServerUriTagFilter() {
 		String metricName = this.properties.getWeb().getServer().getRequest().getMetricName();
@@ -78,7 +78,7 @@ class ObservabilityServletInstrumentationConfiguration {
 		// http.uri must be pushed to a constant
 		return MeterFilter.maximumAllowableTags(metricName, "http.uri", this.properties.getWeb().getServer().getMaxUriTags(),
 				filter);
-	}
+	}*/
 
 	@Bean
 	HandlerParser handlerParser() {
@@ -91,8 +91,8 @@ class ObservabilityServletInstrumentationConfiguration {
 	}
 
 	@Bean
-	InstrumentationHttpServerConfiguration.ObservabilityWebMvcConfigurer observabilityWebMvcConfigurer(RecordingCustomizingHandlerInterceptor interceptor) {
-		return new InstrumentationHttpServerConfiguration.ObservabilityWebMvcConfigurer(interceptor);
+	ObservabilityWebMvcConfigurer observabilityWebMvcConfigurer(RecordingCustomizingHandlerInterceptor interceptor) {
+		return new ObservabilityWebMvcConfigurer(interceptor);
 	}
 
 //

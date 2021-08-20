@@ -26,7 +26,7 @@ import org.springframework.core.observability.tracing.TraceContext;
  * Brave implementation of a {@link Span.Builder}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveSpanBuilder implements Span.Builder {
 

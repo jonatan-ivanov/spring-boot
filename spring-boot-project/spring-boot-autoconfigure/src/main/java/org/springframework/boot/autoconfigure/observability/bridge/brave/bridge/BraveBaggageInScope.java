@@ -25,7 +25,7 @@ import org.springframework.core.observability.tracing.TraceContext;
  * Brave implementation of a {@link BaggageInScope}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveBaggageInScope implements BaggageInScope {
 

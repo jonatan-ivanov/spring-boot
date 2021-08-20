@@ -29,7 +29,7 @@ import org.springframework.boot.autoconfigure.observability.bridge.brave.bridge.
  * A {@link SpanHandler} that sends spans to Wavefront.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class WavefrontBraveSpanHandler extends SpanHandler implements Runnable, Closeable {
 

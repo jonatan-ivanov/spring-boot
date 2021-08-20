@@ -16,6 +16,9 @@
 
 package org.springframework.boot.autoconfigure.web.client;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +45,22 @@ class ObservabilityRestTemplateInstrumentationConfiguration {
 	RestTemplateCustomizer observabilityRestTemplateCustomizer(ObservabilityClientHttpRequestInterceptor interceptor) {
 		return restTemplate -> {
 			restTemplate.getInterceptors().add(0, interceptor);
+		};
+	}
+
+	@Bean
+	static BeanPostProcessor observabilityRestTempateBeanPostProcessor(BeanFactory beanFactory) {
+		return new BeanPostProcessor() {
+			@Override
+			public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+				if (bean instanceof RestTemplate) {
+					RestTemplate restTemplate = (RestTemplate) bean;
+					if (restTemplate.getInterceptors().stream().noneMatch(i -> i instanceof ObservabilityClientHttpRequestInterceptor)) {
+						restTemplate.getInterceptors().add(0, beanFactory.getBean(ObservabilityClientHttpRequestInterceptor.class));
+					}
+				}
+				return bean;
+			}
 		};
 	}
 }

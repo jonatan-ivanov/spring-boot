@@ -26,7 +26,7 @@ import org.springframework.core.observability.transport.http.HttpClientRequest;
  * Brave implementation of a {@link HttpClientRequest}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveHttpClientRequest implements HttpClientRequest {
 

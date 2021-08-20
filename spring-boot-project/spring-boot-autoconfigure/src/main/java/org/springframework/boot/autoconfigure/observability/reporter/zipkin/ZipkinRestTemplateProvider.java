@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
  * A provider for a {@link RestTemplate} used to send spans to Zipkin.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public interface ZipkinRestTemplateProvider {
 

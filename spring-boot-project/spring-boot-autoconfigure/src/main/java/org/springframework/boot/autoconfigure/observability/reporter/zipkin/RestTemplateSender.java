@@ -42,7 +42,7 @@ import static zipkin2.codec.SpanBytesEncoder.JSON_V2;
  * {@link Sender} that uses {@link RestTemplate} to send spans to Zipkin.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class RestTemplateSender extends Sender {
 

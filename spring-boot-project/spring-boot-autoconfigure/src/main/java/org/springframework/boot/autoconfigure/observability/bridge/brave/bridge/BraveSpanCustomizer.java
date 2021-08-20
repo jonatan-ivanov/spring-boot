@@ -23,7 +23,7 @@ import org.springframework.core.observability.tracing.docs.AssertingSpanCustomiz
  * Brave implementation of a {@link SpanCustomizer}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BraveSpanCustomizer implements SpanCustomizer {
 

@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * will be taken from the properties. Otherwise host will be assumed to be a service id.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public interface ZipkinUrlExtractor {
 

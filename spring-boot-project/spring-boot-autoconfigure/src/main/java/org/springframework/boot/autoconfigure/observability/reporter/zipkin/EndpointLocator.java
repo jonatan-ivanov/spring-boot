@@ -22,7 +22,7 @@ import zipkin2.Endpoint;
  * Strategy for locating a zipkin {@linkplain Endpoint} for the current process.
  *
  * @author Dave Syer
- * @since 1.0.0
+ * @since 3.0.0
  */
 public interface EndpointLocator {
 

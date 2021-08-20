@@ -25,7 +25,7 @@ import org.springframework.lang.Nullable;
  * Brave implementation of a {@link TraceContext}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BraveTraceContext implements TraceContext {
 

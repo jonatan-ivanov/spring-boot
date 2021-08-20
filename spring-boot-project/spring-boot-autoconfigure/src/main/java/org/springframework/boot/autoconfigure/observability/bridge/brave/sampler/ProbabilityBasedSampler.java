@@ -42,7 +42,7 @@ import org.springframework.util.Assert;
  *
  * @author Marcin Grzejszczak
  * @author Adrian Cole
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class ProbabilityBasedSampler extends Sampler {
 

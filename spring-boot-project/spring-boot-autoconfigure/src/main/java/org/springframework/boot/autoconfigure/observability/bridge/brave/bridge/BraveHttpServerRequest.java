@@ -31,7 +31,7 @@ import org.springframework.util.ClassUtils;
  * Brave implementation of a {@link HttpServerRequest}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveHttpServerRequest implements HttpServerRequest {
 

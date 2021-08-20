@@ -20,7 +20,7 @@ package org.springframework.boot.autoconfigure.observability.bridge.brave.propag
  * Supported propagation types.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public enum PropagationType {
 

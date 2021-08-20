@@ -26,8 +26,9 @@ import org.springframework.core.observability.transport.http.HttpRequest;
  *
  * @param <T> type of the input, for example a request or method
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
+@SuppressWarnings("unchecked")
 public final class BraveSamplerFunction<T> implements SamplerFunction<T> {
 
 	final brave.sampler.SamplerFunction<T> samplerFunction;

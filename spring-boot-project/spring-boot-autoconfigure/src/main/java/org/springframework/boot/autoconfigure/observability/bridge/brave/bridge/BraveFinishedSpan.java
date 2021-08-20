@@ -28,7 +28,7 @@ import org.springframework.core.observability.tracing.exporter.FinishedSpan;
  * Brave implementation of a {@link FinishedSpan}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BraveFinishedSpan implements FinishedSpan {
 

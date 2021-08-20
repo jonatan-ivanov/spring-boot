@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
  * example, they can add an additional header needed by their environment.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public interface ZipkinRestTemplateCustomizer {
 

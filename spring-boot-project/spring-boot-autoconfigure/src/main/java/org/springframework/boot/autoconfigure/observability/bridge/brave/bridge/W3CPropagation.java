@@ -48,8 +48,9 @@ import static java.util.Collections.singletonList;
  *
  * @author OpenTelemetry Authors
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
+@SuppressWarnings({ "unchecked", "deprecation" })
 class W3CPropagation extends Propagation.Factory implements Propagation<String> {
 
 	static final String TRACE_PARENT = "traceparent";

@@ -33,7 +33,7 @@ import org.springframework.core.observability.tracing.docs.AssertingSpan;
  * Brave implementation of a {@link Tracer}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class BraveTracer implements Tracer {
 

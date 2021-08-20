@@ -23,7 +23,7 @@ import org.springframework.core.observability.tracing.internal.EncodingUtils;
  * Brave implementation of a {@link TraceContext.Builder}.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 class BraveTraceContextBuilder implements TraceContext.Builder {
 

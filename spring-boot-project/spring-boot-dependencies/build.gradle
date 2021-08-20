@@ -1346,7 +1346,7 @@ bom {
 	}
 	library("OpenZipkin Brave AWS", "0.23.2") { // [OBSERVABILITY]
 		group("io.zipkin.aws") {
-			imports = [
+			modules = [
 					"brave-propagation-aws"
 			]
 		}
@@ -1531,6 +1531,7 @@ bom {
 				"spring-boot-starter-logging",
 				"spring-boot-starter-mail",
 				"spring-boot-starter-mustache",
+				"spring-boot-starter-observability",
 				"spring-boot-starter-oauth2-client",
 				"spring-boot-starter-oauth2-resource-server",
 				"spring-boot-starter-quartz",

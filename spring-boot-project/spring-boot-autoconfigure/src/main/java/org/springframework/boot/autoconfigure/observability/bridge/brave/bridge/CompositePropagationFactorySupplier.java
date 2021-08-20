@@ -32,14 +32,14 @@ import brave.propagation.aws.AWSPropagation;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.observability.tracing.brave.propagation.PropagationFactorySupplier;
-import org.springframework.observability.tracing.brave.propagation.PropagationType;
+import org.springframework.boot.autoconfigure.observability.bridge.brave.propagation.PropagationFactorySupplier;
+import org.springframework.boot.autoconfigure.observability.bridge.brave.propagation.PropagationType;
 
 /**
  * Merges various propagation factories into a composite.
  *
  * @author Marcin Grzejszczak
- * @since 1.0.0
+ * @since 3.0.0
  */
 public class CompositePropagationFactorySupplier implements PropagationFactorySupplier {
 
@@ -70,6 +70,7 @@ public class CompositePropagationFactorySupplier implements PropagationFactorySu
 
 }
 
+@SuppressWarnings({ "unchecked", "deprecation" })
 class CompositePropagationFactory extends Propagation.Factory implements Propagation<String> {
 
 	private final Map<PropagationType, Map.Entry<Factory, Propagation<String>>> mapping = new HashMap<>();
