@@ -35,6 +35,7 @@ import org.springframework.boot.web.client.RestTemplateRequestCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,6 +50,7 @@ import org.springframework.web.client.RestTemplate;
 @AutoConfigureAfter(HttpMessageConvertersAutoConfiguration.class)
 @ConditionalOnClass(RestTemplate.class)
 @Conditional(NotReactiveWebApplicationCondition.class)
+@Import(ObservabilityRestTemplateInstrumentationConfiguration.class)
 public class RestTemplateAutoConfiguration {
 
 	@Bean

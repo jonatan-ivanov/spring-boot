@@ -43,6 +43,16 @@ dependencies {
 		exclude group: "org.jboss.spec.javax.annotation", module: "jboss-annotations-api_1.2_spec"
 		exclude group: "org.jboss.spec.javax.servlet", module: "jboss-servlet-api_4.0_spec"
 	}
+	// [OBSERVABILITY]
+	optional("io.zipkin.brave:brave") {
+		exclude group: "io.zipkin.reporter2"
+		exclude group: "io.zipkin.zipkin2"
+	}
+	optional("io.zipkin.brave:brave-context-slf4j")
+	optional("io.zipkin.brave:brave-instrumentation-http")
+	optional("com.wavefront:wavefront-spring-boot") // This must be removed - I'm adding it for demo purposes
+	optional("io.micrometer:micrometer-registry-wavefront")
+
 	optional("jakarta.jms:jakarta.jms-api")
 	optional("jakarta.mail:jakarta.mail-api")
 	optional("jakarta.json.bind:jakarta.json.bind-api")

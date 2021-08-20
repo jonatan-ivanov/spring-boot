@@ -1337,6 +1337,20 @@ bom {
 			]
 		}
 	}
+	library("OpenZipkin Brave Bom", "5.13.2") { // [OBSERVABILITY]
+		group("io.zipkin.brave") {
+			imports = [
+					"brave-bom"
+			]
+		}
+	}
+	library("OpenZipkin Brave AWS", "0.23.2") { // [OBSERVABILITY]
+		group("io.zipkin.aws") {
+			imports = [
+					"brave-propagation-aws"
+			]
+		}
+	}
 	library("Oracle Database", "21.1.0.0") {
 		group("com.oracle.database.jdbc") {
 			imports = [
@@ -1658,7 +1672,7 @@ bom {
 			]
 		}
 	}
-	library("Spring Framework", "5.3.9") {
+	library("Spring Framework", "5.3.10-OBSERVABILITY-SNAPSHOT") { // [OBSERVABILITY]
 		group("org.springframework") {
 			imports = [
 				"spring-framework-bom"
@@ -1835,6 +1849,13 @@ bom {
 		group("org.codehaus.mojo") {
 			plugins = [
 				"versions-maven-plugin"
+			]
+		}
+	}
+	library("Wavefront Spring Boot", "2.3.0-SNAPSHOT") { // [OBSERVABILITY] - Stephane I'm sorry :(
+		group("com.wavefront") {
+			imports = [
+					"wavefront-spring-boot-bom"
 			]
 		}
 	}

@@ -68,7 +68,8 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 @Import({ ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class,
 		ServletWebServerFactoryConfiguration.EmbeddedTomcat.class,
 		ServletWebServerFactoryConfiguration.EmbeddedJetty.class,
-		ServletWebServerFactoryConfiguration.EmbeddedUndertow.class })
+		ServletWebServerFactoryConfiguration.EmbeddedUndertow.class,
+		ObservabilityServletInstrumentationConfiguration.class})
 public class ServletWebServerFactoryAutoConfiguration {
 
 	@Bean
