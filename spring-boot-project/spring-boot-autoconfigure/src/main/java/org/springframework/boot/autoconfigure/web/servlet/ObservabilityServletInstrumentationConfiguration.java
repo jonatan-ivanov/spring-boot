@@ -52,13 +52,13 @@ class ObservabilityServletInstrumentationConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(WebMvcTagsProvider.class)
-	public DefaultWebMvcTagsProvider webMvcTagsProvider(ObjectProvider<WebMvcTagsContributor> contributors) {
+	public DefaultWebMvcTagsProvider observabilityWebMvcTagsProvider(ObjectProvider<WebMvcTagsContributor> contributors) {
 		return new DefaultWebMvcTagsProvider(true,
 				contributors.orderedStream().collect(Collectors.toList()));
 	}
 
 	@Bean
-	public FilterRegistrationBean<WebMvcObservabilityFilter> webMvcMetricsFilter(Recorder<?> registry,
+	public FilterRegistrationBean<WebMvcObservabilityFilter> observabilityWebMvcMetricsFilter(Recorder<?> registry,
 			WebMvcTagsProvider tagsProvider) {
 		String metricName = "http.server.requests";
 		WebMvcObservabilityFilter filter = new WebMvcObservabilityFilter(registry, tagsProvider, metricName);
@@ -81,12 +81,12 @@ class ObservabilityServletInstrumentationConfiguration {
 	}*/
 
 	@Bean
-	HandlerParser handlerParser() {
+	HandlerParser observabilityHandlerParser() {
 		return new HandlerParser();
 	}
 
 	@Bean
-	RecordingCustomizingHandlerInterceptor recordingCustomizingHandlerInterceptor(HandlerParser handlerParser) {
+	RecordingCustomizingHandlerInterceptor observabilityRecordingCustomizingHandlerInterceptor(HandlerParser handlerParser) {
 		return new RecordingCustomizingHandlerInterceptor(handlerParser);
 	}
 

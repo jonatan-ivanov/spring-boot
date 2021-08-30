@@ -17,11 +17,14 @@
 package org.springframework.boot.autoconfigure.observability;
 
 import brave.Tracing;
+import brave.TracingCustomizer;
 import brave.handler.SpanHandler;
 import brave.http.HttpTracing;
+import brave.propagation.ThreadLocalCurrentTraceContext;
 import brave.sampler.Sampler;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.observability.bridge.brave.bridge.BraveBaggageManager;
 import org.springframework.boot.autoconfigure.observability.bridge.brave.bridge.BraveCurrentTraceContext;
@@ -45,31 +48,39 @@ class BraveConfiguration {
 	}
 
 	@Bean
-	Tracing braveTracing(ObjectProvider<SpanHandler> spanHandlers, Sampler sampler) {
+	Tracing braveTracing(ObjectProvider<SpanHandler> spanHandlers, ObjectProvider<TracingCustomizer> tracingCustomizers, Sampler sampler, @Value("${spring.zipkin.service.name:${spring.application.name:default}}") String localServiceName, brave.propagation.CurrentTraceContext currentTraceContext) {
 		Tracing.Builder builder = Tracing.newBuilder();
 		spanHandlers.forEach(builder::addSpanHandler);
+		tracingCustomizers.forEach(tracingCustomizer -> tracingCustomizer.customize(builder));
 		return builder
+				.localServiceName(localServiceName)
+				.currentTraceContext(currentTraceContext)
 				.sampler(sampler)
 				.build();
 	}
 
 	@Bean
-	BraveBaggageManager braveBaggageManager() {
+	brave.propagation.CurrentTraceContext observabilityBraveCurrentTraceContxt() {
+		return ThreadLocalCurrentTraceContext.newBuilder().build();
+	}
+
+	@Bean
+	BraveBaggageManager observabilityBraveBaggageManager() {
 		return new BraveBaggageManager();
 	}
 
 	@Bean
-	brave.Tracer braveTracer(Tracing tracing) {
+	brave.Tracer observabilityBraveTracer(Tracing tracing) {
 		return tracing.tracer();
 	}
 
 	@Bean
-	Tracer braveBridgeTracer(Tracing tracing, BraveBaggageManager baggageManager) {
+	Tracer observabilityBraveBridgeTracer(Tracing tracing, BraveBaggageManager baggageManager) {
 		return new BraveTracer(tracing.tracer(), tracing.currentTraceContext(), baggageManager);
 	}
 
 	@Bean
-	CurrentTraceContext currentTraceContext(Tracing tracing) {
+	CurrentTraceContext observabilityBaveBridgeCurrentTraceContext(Tracing tracing) {
 		return new BraveCurrentTraceContext(tracing.currentTraceContext());
 	}
 
