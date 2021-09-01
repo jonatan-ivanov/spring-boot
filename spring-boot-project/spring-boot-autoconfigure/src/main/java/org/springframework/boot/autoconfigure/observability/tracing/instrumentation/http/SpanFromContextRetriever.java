@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.observability;
+package org.springframework.boot.autoconfigure.observability.tracing.instrumentation.http;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import java.util.regex.Pattern;
+
+import reactor.util.context.Context;
+
+import org.springframework.core.observability.tracing.Span;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Observability.
+ * Provides a URL {@link Pattern} for spans that should be not sampled.
  *
  * @author Marcin Grzejszczak
- * @since 3.0.0
+ * @since 3.0.2
  */
-@Configuration(proxyBeanMethods = false)
-@Import(ObservabilityConfiguration.class)
-public class ObservabilityAutoConfiguration {
+public interface SpanFromContextRetriever {
 
+	/**
+	 * @param context - Reactor context
+	 * @return span or {@code null} if no span present
+	 */
+	default Span findSpan(Context context) {
+		return null;
+	};
 
 }

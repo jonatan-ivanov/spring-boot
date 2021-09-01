@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.observability;
+package org.springframework.boot.autoconfigure.observability.tracing;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Observability.
+ * Sleuth HTTP settings.
  *
  * @author Marcin Grzejszczak
- * @since 3.0.0
+ * @since 2.0.0
  */
-@Configuration(proxyBeanMethods = false)
-@Import(ObservabilityConfiguration.class)
-public class ObservabilityAutoConfiguration {
+@ConfigurationProperties("spring.sleuth.http")
+public class SleuthHttpProperties {
 
+	/**
+	 * Enables HTTP support.
+	 */
+	private boolean enabled = true;
+
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.observability;
+package org.springframework.boot.autoconfigure.observability.tracing.brave.propagation;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import brave.propagation.Propagation;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Observability.
+ * Provides logic for supplying of a {@link Propagation.Factory}.
  *
  * @author Marcin Grzejszczak
  * @since 3.0.0
  */
-@Configuration(proxyBeanMethods = false)
-@Import(ObservabilityConfiguration.class)
-public class ObservabilityAutoConfiguration {
+public interface PropagationFactorySupplier {
 
+	/**
+	 * @return an instance of a {@link Propagation.Factory}
+	 */
+	Propagation.Factory get();
 
 }

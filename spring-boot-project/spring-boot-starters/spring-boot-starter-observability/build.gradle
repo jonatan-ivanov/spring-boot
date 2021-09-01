@@ -13,6 +13,7 @@ dependencies {
 	api("io.zipkin.brave:brave-context-slf4j")
 	api("io.zipkin.brave:brave-instrumentation-http")
 	api("io.zipkin.aws:brave-propagation-aws")
-	api("io.zipkin.reporter2:zipkin-reporter-brave")
+//	api("io.zipkin.reporter2:zipkin-reporter-brave")
+	api("com.wavefront:wavefront-spring-boot-starter")
 	api("io.micrometer:micrometer-registry-prometheus")
 }

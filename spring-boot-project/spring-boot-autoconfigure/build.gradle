@@ -54,7 +54,21 @@ dependencies {
 	optional("com.wavefront:wavefront-spring-boot") {
 		exclude group: "org.springframework"
 		exclude group: "org.springframework.boot"
-	} // This must be removed - I'm adding it for demo purposes
+	}
+	optional("io.zipkin.zipkin2:zipkin")
+	optional("io.zipkin.reporter2:zipkin-reporter")
+	optional("io.zipkin.reporter2:zipkin-reporter-brave")
+	optional("io.zipkin.reporter2:zipkin-sender-kafka") {
+		exclude group: "org.apache.kafka", module: "kafka-clients"
+	}
+	optional("io.zipkin.reporter2:zipkin-sender-activemq-client") {
+		exclude group: "org.apache.activemq", module: "activemq-client"
+	}
+	optional("org.apache.activemq:activemq-client")
+	optional("io.zipkin.reporter2:zipkin-sender-amqp-client") {
+		exclude group: "com.rabbitmq", module: "amqp-client"
+	}
+	// This must be removed - I'm adding it for demo purposes
 	optional("io.micrometer:micrometer-registry-wavefront")
 
 	optional("jakarta.jms:jakarta.jms-api")

@@ -9,7 +9,8 @@ org.springframework.boot.autoconfigure.BackgroundPreinitializer
 
 # Environment Post Processors
 org.springframework.boot.env.EnvironmentPostProcessor=\
-org.springframework.boot.autoconfigure.integration.IntegrationPropertiesEnvironmentPostProcessor
+org.springframework.boot.autoconfigure.integration.IntegrationPropertiesEnvironmentPostProcessor,\
+org.springframework.boot.autoconfigure.observability.tracing.TraceEnvironmentPostProcessor
 
 # Auto Configuration Import Listeners
 org.springframework.boot.autoconfigure.AutoConfigurationImportListener=\
@@ -107,6 +108,9 @@ org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration,\
 org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration,\
 org.springframework.boot.autoconfigure.netty.NettyAutoConfiguration,\
 org.springframework.boot.autoconfigure.observability.ObservabilityAutoConfiguration,\
+org.springframework.boot.autoconfigure.observability.tracing.brave.BraveAutoConfiguration,\
+org.springframework.boot.autoconfigure.observability.tracing.reporter.zipkin.ZipkinAutoConfiguration,\
+org.springframework.boot.autoconfigure.observability.tracing.reporter.wavefront.ObservabilityWavefrontAutoConfiguration,\
 org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,\
 org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration,\
 org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration,\

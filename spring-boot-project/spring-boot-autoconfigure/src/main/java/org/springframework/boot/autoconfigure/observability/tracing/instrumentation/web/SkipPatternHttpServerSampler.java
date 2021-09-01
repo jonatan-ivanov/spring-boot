@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.observability;
+package org.springframework.boot.autoconfigure.observability.tracing.instrumentation.web;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import java.util.regex.Pattern;
+
+import org.springframework.boot.autoconfigure.observability.tracing.instrumentation.http.SkipPatternProvider;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Observability.
+ * Http Sampler that looks at paths.
  *
  * @author Marcin Grzejszczak
  * @since 3.0.0
  */
-@Configuration(proxyBeanMethods = false)
-@Import(ObservabilityConfiguration.class)
-public class ObservabilityAutoConfiguration {
+public class SkipPatternHttpServerSampler extends SkipPatternSampler {
 
+	private final SkipPatternProvider provider;
+
+	public SkipPatternHttpServerSampler(SkipPatternProvider provider) {
+		this.provider = provider;
+	}
+
+	@Override
+	Pattern getPattern() {
+		return this.provider.skipPattern();
+	}
 
 }

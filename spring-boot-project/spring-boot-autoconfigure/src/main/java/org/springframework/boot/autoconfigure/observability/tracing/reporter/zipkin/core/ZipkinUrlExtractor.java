@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.observability;
+package org.springframework.boot.autoconfigure.observability.tracing.reporter.zipkin.core;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import java.net.URI;
+import java.util.function.Supplier;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Observability.
+ * Provides a way to retrieve Zipkin URI. If there's no discovery client then this value
+ * will be taken from the properties. Otherwise host will be assumed to be a service id.
  *
  * @author Marcin Grzejszczak
  * @since 3.0.0
  */
-@Configuration(proxyBeanMethods = false)
-@Import(ObservabilityConfiguration.class)
-public class ObservabilityAutoConfiguration {
+public interface ZipkinUrlExtractor {
 
+	/**
+	 * @param zipkinUrl URL zipkin
+	 * @return parsed URL
+	 */
+	URI zipkinUrl(Supplier<String> zipkinUrl);
 
 }
