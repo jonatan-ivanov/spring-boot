@@ -32,6 +32,7 @@ import org.springframework.data.redis.cache.RedisCache;
  * @author Stephane Nicoll
  * @since 2.4.0
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RedisCacheMetrics extends CacheMeterBinder {
 
 	private final RedisCache cache;

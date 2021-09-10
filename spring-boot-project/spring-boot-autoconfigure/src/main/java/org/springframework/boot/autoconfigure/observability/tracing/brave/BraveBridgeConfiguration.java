@@ -35,14 +35,14 @@ import org.springframework.boot.autoconfigure.observability.tracing.brave.bridge
 import org.springframework.boot.autoconfigure.observability.tracing.brave.bridge.CompositeSpanHandler;
 import org.springframework.boot.autoconfigure.observability.tracing.brave.propagation.PropagationFactorySupplier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.core.observability.tracing.CurrentTraceContext;
-import org.springframework.core.observability.tracing.SpanCustomizer;
-import org.springframework.core.observability.tracing.exporter.SpanFilter;
-import org.springframework.core.observability.tracing.exporter.SpanReporter;
-import org.springframework.core.observability.tracing.propagation.Propagator;
+import io.micrometer.core.instrument.tracing.CurrentTraceContext;
+import io.micrometer.core.instrument.tracing.SpanCustomizer;
+import io.micrometer.core.instrument.tracing.exporter.SpanFilter;
+import io.micrometer.core.instrument.tracing.exporter.SpanReporter;
+import io.micrometer.core.instrument.tracing.propagation.Propagator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.observability.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.Tracer;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ObservabilityTracingPropagationProperties.class)

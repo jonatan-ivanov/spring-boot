@@ -19,8 +19,8 @@ package org.springframework.boot.autoconfigure.observability.tracing.internal;
 import java.lang.reflect.Method;
 
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.observability.tracing.SpanName;
-import org.springframework.core.observability.tracing.SpanNamer;
+import io.micrometer.core.instrument.tracing.SpanName;
+import io.micrometer.core.instrument.tracing.SpanNamer;
 
 /**
  * Default implementation of SpanNamer that tries to get the span name as follows:

@@ -37,8 +37,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.observability.tracing.annotation.ContinueSpan;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
+import io.micrometer.core.instrument.tracing.annotation.ContinueSpan;
+import io.micrometer.core.instrument.tracing.annotation.NewSpan;
 import org.springframework.util.ReflectionUtils;
 
 /**

@@ -16,10 +16,10 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.brave.bridge;
 
-import org.springframework.core.observability.tracing.SpanCustomizer;
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.http.HttpRequestParser;
-import org.springframework.core.observability.transport.http.HttpRequest;
+import io.micrometer.core.instrument.tracing.SpanCustomizer;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.http.HttpRequestParser;
+import io.micrometer.core.instrument.transport.http.HttpRequest;
 
 /**
  * Brave implementation of a {@link HttpRequestParser}.

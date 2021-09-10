@@ -54,8 +54,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.observability.tracing.http.HttpRequestParser;
-import org.springframework.core.observability.tracing.http.HttpResponseParser;
+import io.micrometer.core.instrument.tracing.http.HttpRequestParser;
+import io.micrometer.core.instrument.tracing.http.HttpResponseParser;
 import org.springframework.lang.Nullable;
 
 /**
@@ -196,11 +196,11 @@ public class BraveHttpConfiguration {
 		Object bean = beanFactory.getBean(beanName);
 		SamplerFunction<HttpRequest> braveSampler = bean instanceof SamplerFunction
 				? (SamplerFunction<HttpRequest>) bean
-				: bean instanceof org.springframework.core.observability.tracing.SamplerFunction ? BraveSamplerFunction.toHttpBrave(
-						(org.springframework.core.observability.tracing.SamplerFunction<org.springframework.core.observability.transport.http.HttpRequest>) bean)
+				: bean instanceof io.micrometer.core.instrument.tracing.SamplerFunction ? BraveSamplerFunction.toHttpBrave(
+						(io.micrometer.core.instrument.tracing.SamplerFunction<io.micrometer.core.instrument.transport.http.HttpRequest>) bean)
 						: null;
 		return returnOrThrow(bean, braveSampler, beanName, SamplerFunction.class,
-				org.springframework.core.observability.tracing.SamplerFunction.class);
+				io.micrometer.core.instrument.tracing.SamplerFunction.class);
 	}
 
 	@NotNull

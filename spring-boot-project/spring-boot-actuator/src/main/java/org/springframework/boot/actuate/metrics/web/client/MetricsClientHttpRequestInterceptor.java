@@ -81,15 +81,19 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 			return execution.execute(request, body);
 		}
 		long startTime = System.nanoTime();
+		Timer.Sample sample = this.autoTimer.builder(this.metricName)
+				.description("Timer of RestTemplate operation")
+				.register(this.meterRegistry)
+				.toSample(() -> this.metricName);
 		ClientHttpResponse response = null;
 		try {
+			sample.start();
 			response = execution.execute(request, body);
 			return response;
 		}
 		finally {
 			try {
-				getTimeBuilder(request, response).register(this.meterRegistry).record(System.nanoTime() - startTime,
-						TimeUnit.NANOSECONDS);
+				sample.stop();
 			}
 			catch (Exception ex) {
 				logger.info("Failed to record metrics.", ex);

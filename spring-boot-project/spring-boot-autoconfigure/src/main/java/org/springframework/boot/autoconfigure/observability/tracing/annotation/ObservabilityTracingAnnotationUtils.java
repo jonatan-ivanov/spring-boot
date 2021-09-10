@@ -25,9 +25,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.observability.tracing.annotation.ContinueSpan;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
-import org.springframework.core.observability.tracing.annotation.SpanTag;
+import io.micrometer.core.instrument.tracing.annotation.ContinueSpan;
+import io.micrometer.core.instrument.tracing.annotation.NewSpan;
+import io.micrometer.core.instrument.tracing.annotation.SpanTag;
 
 /**
  * Utility class that can verify whether the method is annotated with the Sleuth

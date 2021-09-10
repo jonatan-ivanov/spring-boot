@@ -22,9 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import brave.baggage.BaggageField;
 
-import org.springframework.core.observability.tracing.BaggageInScope;
-import org.springframework.core.observability.tracing.BaggageManager;
-import org.springframework.core.observability.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.BaggageInScope;
+import io.micrometer.core.instrument.tracing.BaggageManager;
+import io.micrometer.core.instrument.tracing.TraceContext;
 
 /**
  * Brave implementation of a {@link BaggageManager}.

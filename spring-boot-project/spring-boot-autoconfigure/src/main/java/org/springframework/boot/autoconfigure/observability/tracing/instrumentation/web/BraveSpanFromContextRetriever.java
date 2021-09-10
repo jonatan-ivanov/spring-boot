@@ -23,7 +23,7 @@ import reactor.util.context.Context;
 
 import org.springframework.boot.autoconfigure.observability.tracing.brave.bridge.BraveSpan;
 import org.springframework.boot.autoconfigure.observability.tracing.instrumentation.http.SpanFromContextRetriever;
-import org.springframework.core.observability.tracing.Span;
+import io.micrometer.core.instrument.tracing.Span;
 
 /**
  * Retrieves Brave specific classes from Reactor context.

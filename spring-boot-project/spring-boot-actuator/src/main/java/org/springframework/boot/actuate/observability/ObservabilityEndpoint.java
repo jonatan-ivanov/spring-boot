@@ -15,10 +15,12 @@ import org.springframework.boot.context.metrics.buffering.BufferingApplicationSt
 import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.core.log.LogAccessor;
 import org.springframework.core.metrics.StartupStep;
-import org.springframework.core.observability.event.Recorder;
-import org.springframework.core.observability.event.interval.IntervalEvent;
-import org.springframework.core.observability.event.interval.IntervalRecording;
-import org.springframework.core.observability.event.tag.Cardinality;
+
+import io.micrometer.core.event.interval.IntervalEvent;
+import io.micrometer.core.instrument.Cardinality;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+
 import org.springframework.util.StringUtils;
 
 import static java.util.stream.Collectors.toMap;
@@ -26,7 +28,7 @@ import static java.util.stream.Collectors.toMap;
 /**
  * {@link Endpoint @Endpoint} to expose and report the timeline of the
  * {@link org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup
- * application startup} as {@link org.springframework.core.observability.event.Recording}.
+ * application startup} as {@link io.micrometer.core.instrument.event.Recording}.
  *
  * @author Brian Clozel
  * @author Chris Bono
@@ -39,7 +41,7 @@ public class ObservabilityEndpoint {
 
 	private final BufferingApplicationStartup applicationStartup;
 
-	private final Recorder<?> recorder;
+	private final MeterRegistry recorder;
 
 	/**
 	 * Creates a new {@code StartupEndpoint} that will describe the timeline of buffered
@@ -47,7 +49,7 @@ public class ObservabilityEndpoint {
 	 * @param applicationStartup the application startup
 	 * @param recorder recorder
 	 */
-	public ObservabilityEndpoint(BufferingApplicationStartup applicationStartup, Recorder<?> recorder) {
+	public ObservabilityEndpoint(BufferingApplicationStartup applicationStartup, MeterRegistry recorder) {
 		this.applicationStartup = applicationStartup;
 		this.recorder = recorder;
 	}
@@ -120,7 +122,7 @@ public class ObservabilityEndpoint {
 			return;
 		}
 		String name = node.startupStep.getName();
-		IntervalRecording<?> recording = recorder.recordingFor(new IntervalEvent() {
+		Timer.Sample recording = recorder.timer(nameFromEvent(name)).toSample(new IntervalEvent() {
 					@Override
 					public String getLowCardinalityName() {
 						return nameFromEvent(name);
@@ -130,7 +132,7 @@ public class ObservabilityEndpoint {
 					public String getDescription() {
 						return "";
 					}
-				}).tag(org.springframework.core.observability.event.tag.Tag.of("event", name, Cardinality.HIGH))
+				}).tag(io.micrometer.core.instrument.Tag.of("event", name, Cardinality.HIGH))
 				.start(node.startTimeNanos, node.startTimeNanos);
 		StartupStep.Tags tags = node.startupStep.getTags();
 		if (tags != null) {
@@ -138,9 +140,9 @@ public class ObservabilityEndpoint {
 				String key = tag.getKey();
 				String value = tag.getValue();
 				if (key.equals("beanName") || key.equals("postProcessor")) {
-					recording.highCardinalityName(EventNameUtil.toLowerHyphen(name(value)));
+					recording.setHighCardinalityName(EventNameUtil.toLowerHyphen(name(value)));
 				}
-				recording.tag(org.springframework.core.observability.event.tag.Tag.of(EventNameUtil.toLowerHyphen(key), value, Cardinality.HIGH));
+				recording.tag(io.micrometer.core.instrument.Tag.of(EventNameUtil.toLowerHyphen(key), value, Cardinality.HIGH));
 			}
 		}
 

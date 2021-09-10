@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 import reactor.util.context.Context;
 
-import org.springframework.core.observability.tracing.Span;
+import io.micrometer.core.instrument.tracing.Span;
 
 /**
  * Provides a URL {@link Pattern} for spans that should be not sampled.

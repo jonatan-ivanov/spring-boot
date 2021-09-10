@@ -18,7 +18,7 @@ package org.springframework.boot.autoconfigure.observability.tracing.brave.bridg
 
 import java.util.Objects;
 
-import org.springframework.core.observability.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.TraceContext;
 import org.springframework.lang.Nullable;
 
 /**

@@ -30,8 +30,9 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.metrics.ApplicationStartup;
-import org.springframework.core.observability.event.Recorder;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+
+import io.micrometer.core.instrument.MeterRegistry;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for the {@link ObservabilityEndpoint}.
@@ -46,7 +47,7 @@ public class ObservabilityEndpointAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public ObservabilityEndpoint observabilityEndpoint(BufferingApplicationStartup applicationStartup, Recorder<?> recorder) {
+	public ObservabilityEndpoint observabilityEndpoint(BufferingApplicationStartup applicationStartup, MeterRegistry recorder) {
 		return new ObservabilityEndpoint(applicationStartup, recorder);
 	}
 

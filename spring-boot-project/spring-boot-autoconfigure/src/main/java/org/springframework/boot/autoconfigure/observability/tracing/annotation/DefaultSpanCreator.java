@@ -21,9 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.aop.observability.TracingNewSpanParser;
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
-import org.springframework.core.observability.tracing.internal.SpanNameUtil;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.annotation.NewSpan;
+import io.micrometer.core.instrument.tracing.internal.SpanNameUtil;
 import org.springframework.util.StringUtils;
 
 /**

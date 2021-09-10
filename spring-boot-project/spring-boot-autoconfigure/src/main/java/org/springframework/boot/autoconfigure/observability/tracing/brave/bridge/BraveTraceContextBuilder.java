@@ -16,8 +16,8 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.brave.bridge;
 
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.internal.EncodingUtils;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.internal.EncodingUtils;
 
 /**
  * Brave implementation of a {@link TraceContext.Builder}.

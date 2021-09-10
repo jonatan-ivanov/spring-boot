@@ -19,7 +19,7 @@ package org.springframework.boot.autoconfigure.observability.tracing.annotation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.core.observability.tracing.annotation.TagValueExpressionResolver;
+import io.micrometer.core.instrument.tracing.annotation.TagValueExpressionResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

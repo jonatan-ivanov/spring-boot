@@ -46,8 +46,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.exporter.FinishedSpan;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.exporter.FinishedSpan;
 import org.springframework.util.StringUtils;
 
 import static com.wavefront.internal.SpanDerivedMetricsUtils.TRACING_DERIVED_PREFIX;

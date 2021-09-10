@@ -30,11 +30,11 @@ import reactor.core.publisher.MonoOperator;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
 
-import org.springframework.core.observability.tracing.CurrentTraceContext;
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.Tracer;
-import org.springframework.core.observability.tracing.annotation.ContinueSpan;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
+import io.micrometer.core.instrument.tracing.CurrentTraceContext;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.annotation.ContinueSpan;
+import io.micrometer.core.instrument.tracing.annotation.NewSpan;
 import org.springframework.util.StringUtils;
 
 /**

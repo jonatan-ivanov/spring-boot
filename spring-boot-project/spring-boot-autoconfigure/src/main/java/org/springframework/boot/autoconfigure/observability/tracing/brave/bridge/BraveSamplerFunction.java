@@ -18,8 +18,10 @@ package org.springframework.boot.autoconfigure.observability.tracing.brave.bridg
 
 import brave.sampler.SamplerFunctions;
 
-import org.springframework.core.observability.tracing.SamplerFunction;
-import org.springframework.core.observability.transport.http.HttpRequest;
+import io.micrometer.core.instrument.tracing.SamplerFunction;
+import io.micrometer.core.instrument.transport.http.HttpRequest;
+
+import io.micrometer.core.instrument.transport.http.HttpRequest;
 
 /**
  * Brave implementation of a {@link SamplerFunction}.

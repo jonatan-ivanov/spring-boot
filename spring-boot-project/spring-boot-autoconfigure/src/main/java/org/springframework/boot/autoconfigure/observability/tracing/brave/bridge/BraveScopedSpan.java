@@ -18,8 +18,8 @@ package org.springframework.boot.autoconfigure.observability.tracing.brave.bridg
 
 import java.util.Objects;
 
-import org.springframework.core.observability.tracing.ScopedSpan;
-import org.springframework.core.observability.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.ScopedSpan;
+import io.micrometer.core.instrument.tracing.TraceContext;
 
 /**
  * Brave implementation of a {@link ScopedSpan}.

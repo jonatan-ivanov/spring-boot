@@ -19,9 +19,9 @@ package org.springframework.boot.autoconfigure.observability.tracing.brave.bridg
 import java.util.Collection;
 import java.util.Collections;
 
-import org.springframework.core.observability.transport.Kind;
-import org.springframework.core.observability.transport.http.HttpClientRequest;
-import org.springframework.core.observability.transport.http.HttpClientResponse;
+import io.micrometer.core.instrument.transport.Kind;
+import io.micrometer.core.instrument.transport.http.HttpClientRequest;
+import io.micrometer.core.instrument.transport.http.HttpClientResponse;
 
 /**
  * Brave implementation of a {@link HttpClientResponse}.

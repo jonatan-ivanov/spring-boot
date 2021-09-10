@@ -16,9 +16,9 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.annotation;
 
-import org.springframework.core.observability.tracing.docs.DocumentedSpan;
-import org.springframework.core.observability.tracing.docs.EventValue;
-import org.springframework.core.observability.tracing.docs.TagKey;
+import io.micrometer.core.instrument.tracing.docs.DocumentedSpan;
+import io.micrometer.core.instrument.tracing.docs.EventValue;
+import io.micrometer.core.instrument.tracing.docs.TagKey;
 
 enum ObservabilityTracingAnnotationSpan implements DocumentedSpan {
 

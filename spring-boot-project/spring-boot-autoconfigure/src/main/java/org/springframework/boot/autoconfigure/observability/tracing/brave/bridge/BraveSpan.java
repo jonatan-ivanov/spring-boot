@@ -18,9 +18,9 @@ package org.springframework.boot.autoconfigure.observability.tracing.brave.bridg
 
 import java.util.Objects;
 
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.docs.AssertingSpan;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.docs.AssertingSpan;
 
 /**
  * Brave implementation of a {@link Span}.

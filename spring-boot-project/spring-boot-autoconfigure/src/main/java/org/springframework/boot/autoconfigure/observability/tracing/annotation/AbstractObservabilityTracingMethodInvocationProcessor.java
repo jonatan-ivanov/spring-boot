@@ -16,6 +16,10 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.annotation;
 
+import io.micrometer.core.instrument.tracing.CurrentTraceContext;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.annotation.ContinueSpan;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,10 +29,6 @@ import org.springframework.aop.observability.TracingNewSpanParser;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.core.observability.tracing.CurrentTraceContext;
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.Tracer;
-import org.springframework.core.observability.tracing.annotation.ContinueSpan;
 
 /**
  * Sleuth annotation processor.

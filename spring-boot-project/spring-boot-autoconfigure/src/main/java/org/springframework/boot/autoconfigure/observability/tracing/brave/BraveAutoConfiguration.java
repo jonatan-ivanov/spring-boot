@@ -46,7 +46,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.observability.tracing.SpanNamer;
+import io.micrometer.core.instrument.tracing.SpanNamer;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 

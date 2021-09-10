@@ -20,14 +20,14 @@ import java.util.Map;
 
 import brave.propagation.TraceContextOrSamplingFlags;
 
-import org.springframework.core.observability.tracing.BaggageInScope;
-import org.springframework.core.observability.tracing.CurrentTraceContext;
-import org.springframework.core.observability.tracing.ScopedSpan;
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.SpanCustomizer;
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.Tracer;
-import org.springframework.core.observability.tracing.docs.AssertingSpan;
+import io.micrometer.core.instrument.tracing.BaggageInScope;
+import io.micrometer.core.instrument.tracing.CurrentTraceContext;
+import io.micrometer.core.instrument.tracing.ScopedSpan;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.SpanCustomizer;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.docs.AssertingSpan;
 
 /**
  * Brave implementation of a {@link Tracer}.

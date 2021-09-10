@@ -28,6 +28,7 @@ import org.springframework.cache.caffeine.CaffeineCache;
  * @author Stephane Nicoll
  * @since 2.0.0
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CaffeineCacheMeterBinderProvider implements CacheMeterBinderProvider<CaffeineCache> {
 
 	@Override

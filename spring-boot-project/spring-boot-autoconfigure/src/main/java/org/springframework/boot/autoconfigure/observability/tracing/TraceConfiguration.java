@@ -16,13 +16,14 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing;
 
+import io.micrometer.core.instrument.tracing.SpanNamer;
+import io.micrometer.core.instrument.tracing.exporter.SpanFilter;
+import io.micrometer.core.instrument.tracing.exporter.SpanIgnoringSpanFilter;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.observability.tracing.internal.DefaultSpanNamer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.core.observability.tracing.SpanNamer;
-import org.springframework.core.observability.tracing.exporter.SpanFilter;
-import org.springframework.core.observability.tracing.exporter.SpanIgnoringSpanFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

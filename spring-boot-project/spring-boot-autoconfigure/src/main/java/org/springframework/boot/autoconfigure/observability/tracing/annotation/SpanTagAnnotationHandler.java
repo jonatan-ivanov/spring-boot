@@ -26,11 +26,11 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.observability.tracing.SpanCustomizer;
-import org.springframework.core.observability.tracing.annotation.NoOpTagValueResolver;
-import org.springframework.core.observability.tracing.annotation.SpanTag;
-import org.springframework.core.observability.tracing.annotation.TagValueExpressionResolver;
-import org.springframework.core.observability.tracing.annotation.TagValueResolver;
+import io.micrometer.core.instrument.tracing.SpanCustomizer;
+import io.micrometer.core.instrument.tracing.annotation.NoOpTagValueResolver;
+import io.micrometer.core.instrument.tracing.annotation.SpanTag;
+import io.micrometer.core.instrument.tracing.annotation.TagValueExpressionResolver;
+import io.micrometer.core.instrument.tracing.annotation.TagValueResolver;
 import org.springframework.util.StringUtils;
 
 /**

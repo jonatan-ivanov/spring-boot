@@ -35,8 +35,8 @@ import brave.propagation.TraceContext;
 import brave.propagation.TraceContextOrSamplingFlags;
 
 import org.springframework.core.log.LogAccessor;
-import org.springframework.core.observability.tracing.BaggageInScope;
-import org.springframework.core.observability.tracing.internal.EncodingUtils;
+import io.micrometer.core.instrument.tracing.BaggageInScope;
+import io.micrometer.core.instrument.tracing.internal.EncodingUtils;
 
 import static java.util.Collections.singletonList;
 

@@ -16,7 +16,7 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.annotation;
 
-import org.springframework.core.observability.tracing.annotation.SpanTag;
+import io.micrometer.core.instrument.tracing.annotation.SpanTag;
 
 /**
  * A container class that holds information about the parameter of the annotated method

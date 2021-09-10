@@ -16,8 +16,8 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.brave.bridge;
 
-import org.springframework.core.observability.tracing.SpanCustomizer;
-import org.springframework.core.observability.tracing.docs.AssertingSpanCustomizer;
+import io.micrometer.core.instrument.tracing.SpanCustomizer;
+import io.micrometer.core.instrument.tracing.docs.AssertingSpanCustomizer;
 
 /**
  * Brave implementation of a {@link SpanCustomizer}.

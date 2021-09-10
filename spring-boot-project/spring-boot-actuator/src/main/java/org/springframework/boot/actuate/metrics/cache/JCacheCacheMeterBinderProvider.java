@@ -28,6 +28,7 @@ import org.springframework.cache.jcache.JCacheCache;
  * @author Stephane Nicoll
  * @since 2.0.0
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class JCacheCacheMeterBinderProvider implements CacheMeterBinderProvider<JCacheCache> {
 
 	@Override

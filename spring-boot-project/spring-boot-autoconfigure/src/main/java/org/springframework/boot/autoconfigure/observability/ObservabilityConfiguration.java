@@ -21,40 +21,49 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.micrometer.core.event.listener.RecordingListener;
+import io.micrometer.core.event.listener.composite.AllMatchingCompositeRecordingListener;
+import io.micrometer.core.event.listener.composite.CompositeRecordingListener;
+import io.micrometer.core.event.listener.composite.FirstMatchingCompositeRecordingListener;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.listener.tracing.DefaultTracingRecordingListener;
+import io.micrometer.core.instrument.listener.tracing.HttpClientTracingRecordingListener;
+import io.micrometer.core.instrument.listener.tracing.HttpServerTracingRecordingListener;
+import io.micrometer.core.instrument.listener.tracing.TracingRecordingListener;
+import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.http.HttpClientHandler;
+import io.micrometer.core.instrument.tracing.http.HttpServerHandler;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.observability.event.Recorder;
-import org.springframework.core.observability.event.SimpleRecorder;
-import org.springframework.core.observability.event.listener.RecordingListener;
-import org.springframework.core.observability.event.listener.composite.AllMatchingCompositeRecordingListener;
-import org.springframework.core.observability.event.listener.composite.CompositeRecordingListener;
-import org.springframework.core.observability.event.listener.composite.FirstMatchingCompositeRecordingListener;
-import org.springframework.core.observability.listener.metrics.MetricsRecordingListener;
-import org.springframework.core.observability.listener.metrics.MicrometerRecordingListener;
-import org.springframework.core.observability.listener.tracing.DefaultTracingRecordingListener;
-import org.springframework.core.observability.listener.tracing.HttpClientTracingRecordingListener;
-import org.springframework.core.observability.listener.tracing.HttpServerTracingRecordingListener;
-import org.springframework.core.observability.listener.tracing.TracingRecordingListener;
-import org.springframework.core.observability.time.Clock;
-import org.springframework.core.observability.tracing.Tracer;
-import org.springframework.core.observability.tracing.http.HttpClientHandler;
-import org.springframework.core.observability.tracing.http.HttpServerHandler;
 
 @Configuration(proxyBeanMethods = false)
 class ObservabilityConfiguration {
 
-	@Bean
-	Recorder<?> simpleRecorder(CompositeRecordingListener compositeRecordingListener) {
-		return new SimpleRecorder<>(compositeRecordingListener, Clock.SYSTEM);
-	}
 
 	@Bean
+	BeanPostProcessor listenerProvidingMeterRegistryCustomizer(BeanFactory beanFactory) {
+		return new BeanPostProcessor() {
+			@Override
+			public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+				if (bean instanceof MeterRegistry) {
+					((MeterRegistry) bean).config().recordingListener(beanFactory.getBean(CompositeRecordingListener.class));
+				}
+				return bean;
+			}
+		};
+	}
+
+
+	@Bean
+	@Primary
 	CompositeRecordingListener compositeRecordingListener(List<RecordingListener<?>> listeners) {
 		return new AllMatchingCompositeRecordingListener(listenersWithoutDuplicates(listeners));
 	}
@@ -96,26 +105,6 @@ class ObservabilityConfiguration {
 		@Bean
 		FirstMatchingCompositeRecordingListener tracingFirstMatchingRecordingListeners(List<TracingRecordingListener> tracingRecordingListeners) {
 			return new FirstMatchingCompositeRecordingListener(tracingRecordingListeners);
-		}
-	}
-
-	@Configuration(proxyBeanMethods = false)
-	static class MetricsConfig {
-
-		@Bean
-		FirstMatchingCompositeRecordingListener metricsFirstMatchingRecordingListeners(List<MetricsRecordingListener<?>> metricsRecordingListeners) {
-			return new FirstMatchingCompositeRecordingListener(metricsRecordingListeners);
-		}
-
-		@Configuration(proxyBeanMethods = false)
-		@ConditionalOnClass(MeterRegistry.class)
-		static class MicrometerConfig {
-
-			@Bean
-			@Order
-			MicrometerRecordingListener micrometerRecordingListener(MeterRegistry meterRegistry) {
-				return new MicrometerRecordingListener(meterRegistry);
-			}
 		}
 	}
 

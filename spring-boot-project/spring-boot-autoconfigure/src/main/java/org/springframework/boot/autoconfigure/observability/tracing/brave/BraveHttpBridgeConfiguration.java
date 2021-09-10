@@ -22,8 +22,8 @@ import org.springframework.boot.autoconfigure.observability.tracing.brave.bridge
 import org.springframework.boot.autoconfigure.observability.tracing.brave.bridge.BraveHttpServerHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.observability.tracing.http.HttpClientHandler;
-import org.springframework.core.observability.tracing.http.HttpServerHandler;
+import io.micrometer.core.instrument.tracing.http.HttpClientHandler;
+import io.micrometer.core.instrument.tracing.http.HttpServerHandler;
 
 @Configuration(proxyBeanMethods = false)
 class BraveHttpBridgeConfiguration {

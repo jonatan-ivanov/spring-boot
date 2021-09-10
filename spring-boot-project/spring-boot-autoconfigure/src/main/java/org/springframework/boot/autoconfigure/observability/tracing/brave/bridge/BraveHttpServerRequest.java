@@ -22,8 +22,8 @@ import java.util.Collections;
 
 import javax.servlet.ServletRequest;
 
-import org.springframework.core.observability.transport.Kind;
-import org.springframework.core.observability.transport.http.HttpServerRequest;
+import io.micrometer.core.instrument.transport.Kind;
+import io.micrometer.core.instrument.transport.http.HttpServerRequest;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.ClassUtils;
 

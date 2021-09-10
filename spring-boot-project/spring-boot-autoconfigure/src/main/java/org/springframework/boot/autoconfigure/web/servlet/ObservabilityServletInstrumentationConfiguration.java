@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.DispatcherType;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.MeterFilter;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -31,7 +32,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.observability.event.Recorder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.observability.DefaultWebMvcTagsProvider;
@@ -58,7 +58,7 @@ class ObservabilityServletInstrumentationConfiguration {
 	}
 
 	@Bean
-	public FilterRegistrationBean<WebMvcObservabilityFilter> observabilityWebMvcMetricsFilter(Recorder<?> registry,
+	public FilterRegistrationBean<WebMvcObservabilityFilter> observabilityWebMvcMetricsFilter(MeterRegistry registry,
 			WebMvcTagsProvider tagsProvider) {
 		String metricName = "http.server.requests";
 		WebMvcObservabilityFilter filter = new WebMvcObservabilityFilter(registry, tagsProvider, metricName);

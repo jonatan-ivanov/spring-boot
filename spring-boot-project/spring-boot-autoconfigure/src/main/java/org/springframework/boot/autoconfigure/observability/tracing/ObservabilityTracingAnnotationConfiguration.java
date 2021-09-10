@@ -16,6 +16,10 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing;
 
+import io.micrometer.core.instrument.tracing.annotation.NoOpTagValueResolver;
+import io.micrometer.core.instrument.tracing.annotation.TagValueExpressionResolver;
+import io.micrometer.core.instrument.tracing.annotation.TagValueResolver;
+
 import org.springframework.aop.observability.TracingMethodInvocationProcessor;
 import org.springframework.aop.observability.TracingNewSpanParser;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -28,10 +32,6 @@ import org.springframework.boot.autoconfigure.observability.tracing.annotation.N
 import org.springframework.boot.autoconfigure.observability.tracing.annotation.ObservabilityTracingAdvisorConfig;
 import org.springframework.boot.autoconfigure.observability.tracing.annotation.ReactorObservabilityTracingMethodInvocationProcessor;
 import org.springframework.boot.autoconfigure.observability.tracing.annotation.SpelTagValueExpressionResolver;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
-import org.springframework.core.observability.tracing.annotation.NoOpTagValueResolver;
-import org.springframework.core.observability.tracing.annotation.TagValueExpressionResolver;
-import org.springframework.core.observability.tracing.annotation.TagValueResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;

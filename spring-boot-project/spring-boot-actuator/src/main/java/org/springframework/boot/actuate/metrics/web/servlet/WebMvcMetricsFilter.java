@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.event.interval.IntervalHttpServerEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.Timer.Builder;
@@ -41,6 +42,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.mvc.observability.HttpServletRequestWrapper;
 import org.springframework.web.util.NestedServletException;
 
 /**
@@ -115,7 +117,12 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 	}
 
 	private TimingContext startAndAttachTimingContext(HttpServletRequest request) {
-		Timer.Sample timerSample = Timer.start(this.registry);
+		Timer.Sample timerSample = Timer.start(new IntervalHttpServerEvent(new HttpServletRequestWrapper(request)) {
+			@Override
+			public String getLowCardinalityName() {
+				return "http";
+			}
+		}, this.registry);
 		TimingContext timingContext = new TimingContext(timerSample);
 		timingContext.attachTo(request);
 		return timingContext;

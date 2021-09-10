@@ -18,10 +18,10 @@ package org.springframework.boot.autoconfigure.observability.tracing.annotation;
 
 import org.aopalliance.intercept.MethodInvocation;
 
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.Tracer;
-import org.springframework.core.observability.tracing.annotation.ContinueSpan;
-import org.springframework.core.observability.tracing.annotation.NewSpan;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.annotation.ContinueSpan;
+import io.micrometer.core.instrument.tracing.annotation.NewSpan;
 import org.springframework.util.StringUtils;
 
 /**

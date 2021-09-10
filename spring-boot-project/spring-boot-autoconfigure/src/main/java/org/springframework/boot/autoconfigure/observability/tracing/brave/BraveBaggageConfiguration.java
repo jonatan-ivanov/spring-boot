@@ -224,7 +224,7 @@ class BraveBaggageConfiguration {
 	 *
 	 * <p>
 	 * {@link SpanHandler} beans, even if {@link SpanHandler#NOOP}, can trigger
-	 * {@code org.springframework.core.observability.tracing.brave.sampler.SamplerCondition}
+	 * {@code io.micrometer.core.instrument.tracing.brave.sampler.SamplerCondition}
 	 */
 	@Configuration(proxyBeanMethods = false)
 	@Conditional(BaggageTagSpanHandlerCondition.class)

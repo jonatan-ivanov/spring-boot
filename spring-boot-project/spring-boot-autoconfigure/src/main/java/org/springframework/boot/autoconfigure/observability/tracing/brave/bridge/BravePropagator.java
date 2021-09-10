@@ -22,9 +22,9 @@ import brave.Tracing;
 import brave.propagation.SamplingFlags;
 import brave.propagation.TraceContextOrSamplingFlags;
 
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.TraceContext;
-import org.springframework.core.observability.tracing.propagation.Propagator;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.TraceContext;
+import io.micrometer.core.instrument.tracing.propagation.Propagator;
 
 /**
  * Brave implementation of a {@link Propagator}.

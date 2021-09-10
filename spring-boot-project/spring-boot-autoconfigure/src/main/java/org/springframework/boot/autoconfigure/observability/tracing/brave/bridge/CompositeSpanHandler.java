@@ -23,8 +23,8 @@ import brave.handler.MutableSpan;
 import brave.handler.SpanHandler;
 import brave.propagation.TraceContext;
 
-import org.springframework.core.observability.tracing.exporter.SpanFilter;
-import org.springframework.core.observability.tracing.exporter.SpanReporter;
+import io.micrometer.core.instrument.tracing.exporter.SpanFilter;
+import io.micrometer.core.instrument.tracing.exporter.SpanReporter;
 
 /**
  * Merges {@link SpanFilter}s and {@link SpanReporter}s into a {@link SpanHandler}.

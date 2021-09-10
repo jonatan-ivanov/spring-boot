@@ -21,8 +21,8 @@ import java.util.Map;
 
 import brave.handler.MutableSpan;
 
-import org.springframework.core.observability.tracing.Span;
-import org.springframework.core.observability.tracing.exporter.FinishedSpan;
+import io.micrometer.core.instrument.tracing.Span;
+import io.micrometer.core.instrument.tracing.exporter.FinishedSpan;
 
 /**
  * Brave implementation of a {@link FinishedSpan}.

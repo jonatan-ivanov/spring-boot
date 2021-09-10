@@ -23,7 +23,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.observability.event.Recorder;
+
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.observability.DefaultObservabilityClientHttpRequestInterceptorTagsProvider;
 import org.springframework.web.client.observability.ObservabilityClientHttpRequestInterceptor;
@@ -32,8 +33,8 @@ import org.springframework.web.client.observability.ObservabilityClientHttpReque
 @Configuration(proxyBeanMethods = false)
 class ObservabilityRestTemplateInstrumentationConfiguration {
 	@Bean
-	ObservabilityClientHttpRequestInterceptor observabilityClientHttpRequestInterceptor(Recorder<?> recorder, ObservabilityClientHttpRequestInterceptorTagsProvider tagsProvider) {
-		return new ObservabilityClientHttpRequestInterceptor(recorder, tagsProvider);
+	ObservabilityClientHttpRequestInterceptor observabilityClientHttpRequestInterceptor(MeterRegistry registry, ObservabilityClientHttpRequestInterceptorTagsProvider tagsProvider) {
+		return new ObservabilityClientHttpRequestInterceptor(registry, tagsProvider);
 	}
 
 	@Bean
