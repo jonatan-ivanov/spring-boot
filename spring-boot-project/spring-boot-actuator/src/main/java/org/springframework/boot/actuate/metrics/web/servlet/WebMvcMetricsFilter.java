@@ -43,6 +43,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.observability.HttpServletRequestWrapper;
+import org.springframework.web.servlet.mvc.observability.HttpServletResponseWrapper;
 import org.springframework.web.util.NestedServletException;
 
 /**
@@ -142,6 +143,7 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 			Object handler = getHandler(request);
 			Set<Timed> annotations = getTimedAnnotations(handler);
 			Timer.Sample timerSample = timingContext.getTimerSample();
+			((IntervalHttpServerEvent) timerSample.getEvent()).setResponse(new HttpServletResponseWrapper(request, response, exception));
 			AutoTimer.apply(this.autoTimer, this.metricName, annotations,
 					(builder) -> timerSample.stop(getTimer(builder, handler, request, response, exception)));
 		}

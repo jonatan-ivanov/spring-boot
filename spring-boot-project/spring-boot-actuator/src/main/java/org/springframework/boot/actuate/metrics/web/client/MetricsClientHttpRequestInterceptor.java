@@ -18,13 +18,18 @@ package org.springframework.boot.actuate.metrics.web.client;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.micrometer.core.event.interval.IntervalHttpClientEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.transport.http.HttpClientRequest;
+import io.micrometer.core.instrument.transport.http.HttpClientResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +40,9 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.lang.Nullable;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.servlet.mvc.observability.HttpServletRequestWrapper;
 import org.springframework.web.util.UriTemplateHandler;
 
 /**
@@ -80,19 +88,32 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 		if (!enabled()) {
 			return execution.execute(request, body);
 		}
-		long startTime = System.nanoTime();
+		HttpRequestWrapper requestWrapper = new HttpRequestWrapper(request);
+		IntervalHttpClientEvent event = new IntervalHttpClientEvent(requestWrapper) {
+			@Override
+			public String getLowCardinalityName() {
+				return metricName;
+			}
+		};
 		Timer.Sample sample = this.autoTimer.builder(this.metricName)
 				.description("Timer of RestTemplate operation")
 				.register(this.meterRegistry)
-				.toSample(() -> this.metricName);
+				.toSample(event);
 		ClientHttpResponse response = null;
+		Throwable error = null;
 		try {
 			sample.start();
 			response = execution.execute(request, body);
 			return response;
 		}
+		catch (Throwable e) {
+			error = e;
+			sample.error(e);
+			throw e;
+		}
 		finally {
 			try {
+				event.setResponse(new ClientHttpResponseWrapper(requestWrapper, response, error));
 				sample.stop();
 			}
 			catch (Exception ex) {
@@ -113,12 +134,6 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 			return ((RootUriTemplateHandler) delegate).withHandlerWrapper(CapturingUriTemplateHandler::new);
 		}
 		return new CapturingUriTemplateHandler(delegate);
-	}
-
-	private Timer.Builder getTimeBuilder(HttpRequest request, ClientHttpResponse response) {
-		return this.autoTimer.builder(this.metricName)
-				.tags(this.tagProvider.getTags(urlTemplate.get().poll(), request, response))
-				.description("Timer of RestTemplate operation");
 	}
 
 	private final class CapturingUriTemplateHandler implements UriTemplateHandler {
@@ -156,6 +171,105 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 		@Override
 		protected Deque<String> initialValue() {
 			return new LinkedList<>();
+		}
+
+	}
+
+	private static final class HttpRequestWrapper implements HttpClientRequest {
+
+		final HttpRequest delegate;
+
+		HttpRequestWrapper(HttpRequest delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public Collection<String> headerNames() {
+			return this.delegate.getHeaders().keySet();
+		}
+
+		@Override
+		public Object unwrap() {
+			return this.delegate;
+		}
+
+		@Override
+		public String method() {
+			return this.delegate.getMethod().name();
+		}
+
+		@Override
+		public String path() {
+			return this.delegate.getURI().getPath();
+		}
+
+		@Override
+		public String url() {
+			return this.delegate.getURI().toString();
+		}
+
+		@Override
+		public String header(String name) {
+			Object result = this.delegate.getHeaders().getFirst(name);
+			return result != null ? result.toString() : null;
+		}
+
+		@Override
+		public void header(String name, String value) {
+			this.delegate.getHeaders().set(name, value);
+		}
+
+	}
+
+	private static final class ClientHttpResponseWrapper implements HttpClientResponse {
+
+		final HttpRequestWrapper request;
+
+		@Nullable
+		final ClientHttpResponse response;
+
+		@Nullable
+		final Throwable error;
+
+		ClientHttpResponseWrapper(HttpRequestWrapper request, @Nullable ClientHttpResponse response,
+				@Nullable Throwable error) {
+			this.request = request;
+			this.response = response;
+			this.error = error;
+		}
+
+		@Override
+		public Object unwrap() {
+			return this.response;
+		}
+
+		@Override
+		public Collection<String> headerNames() {
+			return this.response != null ? this.response.getHeaders().keySet() : Collections.emptyList();
+		}
+
+		@Override
+		public HttpClientRequest request() {
+			return this.request;
+		}
+
+		@Override
+		public Throwable error() {
+			return this.error;
+		}
+
+		@Override
+		public int statusCode() {
+			try {
+				int result = this.response != null ? this.response.getRawStatusCode() : 0;
+				if (result <= 0 && this.error instanceof HttpStatusCodeException) {
+					result = ((HttpStatusCodeException) this.error).getRawStatusCode();
+				}
+				return result;
+			}
+			catch (Exception e) {
+				return 0;
+			}
 		}
 
 	}

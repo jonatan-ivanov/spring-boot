@@ -50,7 +50,8 @@ import org.springframework.web.client.RestTemplate;
 @AutoConfigureAfter(HttpMessageConvertersAutoConfiguration.class)
 @ConditionalOnClass(RestTemplate.class)
 @Conditional(NotReactiveWebApplicationCondition.class)
-@Import(ObservabilityRestTemplateInstrumentationConfiguration.class)
+// TODO: Observability
+//@Import(ObservabilityRestTemplateInstrumentationConfiguration.class)
 public class RestTemplateAutoConfiguration {
 
 	@Bean
