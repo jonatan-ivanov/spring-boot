@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Johnny Lim
  */
 class PrometheusScrapeEndpointIntegrationTests {
+	private static final MediaType DEFAULT_ACCEPT = MediaType.parseMediaType("application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1");
 
 	@WebEndpointTest
 	void scrapeHasContentTypeText004ByDefault(WebTestClient client) {
@@ -51,6 +52,14 @@ class PrometheusScrapeEndpointIntegrationTests {
 	void scrapeCanProduceOpenMetrics100(WebTestClient client) {
 		MediaType openMetrics = MediaType.parseMediaType(TextFormat.CONTENT_TYPE_OPENMETRICS_100);
 		client.get().uri("/actuator/prometheus").accept(openMetrics).exchange().expectStatus().isOk().expectHeader()
+				.contentType(openMetrics).expectBody(String.class).value((body) -> assertThat(body)
+						.contains("counter1_total").contains("counter2_total").contains("counter3_total"));
+	}
+
+	@WebEndpointTest
+	void scrapeCanProduceOpenMetrics100ForDefaultPrometheusRequest(WebTestClient client) {
+		MediaType openMetrics = MediaType.parseMediaType(TextFormat.CONTENT_TYPE_OPENMETRICS_100);
+		client.get().uri("/actuator/prometheus").accept(DEFAULT_ACCEPT).exchange().expectStatus().isOk().expectHeader()
 				.contentType(openMetrics).expectBody(String.class).value((body) -> assertThat(body)
 						.contains("counter1_total").contains("counter2_total").contains("counter3_total"));
 	}
