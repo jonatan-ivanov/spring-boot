@@ -38,7 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Johnny Lim
  */
 class PrometheusScrapeEndpointIntegrationTests {
-	private static final MediaType DEFAULT_ACCEPT = MediaType.parseMediaType("application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1");
+
+	private static final MediaType DEFAULT_ACCEPT = MediaType
+			.parseMediaType("application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1");
 
 	@WebEndpointTest
 	void scrapeHasContentTypeText004ByDefault(WebTestClient client) {
