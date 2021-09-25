@@ -56,7 +56,7 @@ public class PrometheusScrapeEndpoint {
 					? this.collectorRegistry.filteredMetricFamilySamples(includedNames)
 					: this.collectorRegistry.metricFamilySamples();
 			format.write(writer, samples);
-			return new WebEndpointResponse<>(writer.toString(), format);
+			return new WebEndpointResponse<>(writer.toString(), format.getContentType());
 		}
 		catch (IOException ex) {
 			// This actually never happens since StringWriter doesn't throw an IOException

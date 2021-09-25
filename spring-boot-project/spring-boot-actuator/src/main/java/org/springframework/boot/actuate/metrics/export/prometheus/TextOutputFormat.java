@@ -24,6 +24,7 @@ import io.prometheus.client.Collector.MetricFamilySamples;
 import io.prometheus.client.exporter.common.TextFormat;
 
 import org.springframework.boot.actuate.endpoint.Producible;
+import org.springframework.http.MediaType;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 
@@ -38,7 +39,7 @@ public enum TextOutputFormat implements Producible<TextOutputFormat> {
 	/**
 	 * OpenMetrics text version 1.0.0.
 	 */
-	CONTENT_TYPE_OPENMETRICS_100(TextFormat.CONTENT_TYPE_OPENMETRICS_100) {
+	CONTENT_TYPE_OPENMETRICS_100("application/openmetrics-text") {
 
 		@Override
 		void write(Writer writer, Enumeration<MetricFamilySamples> samples) throws IOException {
@@ -50,7 +51,7 @@ public enum TextOutputFormat implements Producible<TextOutputFormat> {
 	/**
 	 * Prometheus text version 0.0.4.
 	 */
-	CONTENT_TYPE_004(TextFormat.CONTENT_TYPE_004) {
+	CONTENT_TYPE_004(MediaType.TEXT_PLAIN_VALUE) {
 
 		@Override
 		void write(Writer writer, Enumeration<MetricFamilySamples> samples) throws IOException {
@@ -61,13 +62,20 @@ public enum TextOutputFormat implements Producible<TextOutputFormat> {
 
 	private final MimeType mimeType;
 
+	private final MimeType contentType;
+
 	TextOutputFormat(String mimeType) {
 		this.mimeType = MimeTypeUtils.parseMimeType(mimeType);
+		this.contentType = MimeTypeUtils.parseMimeType(TextFormat.chooseContentType(mimeType));
 	}
 
 	@Override
 	public MimeType getProducedMimeType() {
 		return this.mimeType;
+	}
+
+	MimeType getContentType() {
+		return this.contentType;
 	}
 
 	abstract void write(Writer writer, Enumeration<MetricFamilySamples> samples) throws IOException;
