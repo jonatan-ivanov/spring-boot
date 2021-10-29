@@ -22,6 +22,7 @@ import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.tracing.CurrentTraceContext;
 import io.micrometer.core.instrument.tracing.Span;
 import io.micrometer.core.instrument.tracing.Tracer;
+import io.micrometer.core.instrument.tracing.internal.SpanNameUtil;
 
 /**
  * {@link RecordingListener} that uses the Tracing API to record events.
@@ -71,6 +72,8 @@ public class DefaultTracingRecordingListener implements TracingRecordingListener
 
 		// TODO: This should go to the tags provider
 		// this.tracingTagFilter.tagSpan(span, intervalRecording.getTags());
+
+		span.name(SpanNameUtil.toLowerHyphen(timer.getId().getName()));
 
 		cleanup(intervalRecording);
 		span.end();
