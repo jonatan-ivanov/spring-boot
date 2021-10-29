@@ -26,11 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.event.interval.IntervalHttpServerEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.Timer.Builder;
 import io.micrometer.core.instrument.Timer.Sample;
+import io.micrometer.core.instrument.tracing.context.IntervalHttpServerEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -75,8 +75,8 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 	 * @param autoTimer the auto-timers to apply or {@code null} to disable auto-timing
 	 * @since 2.2.0
 	 */
-	public WebMvcMetricsFilter(MeterRegistry registry, WebMvcTagsProvider tagsProvider, String metricName,
-			AutoTimer autoTimer) {
+	public WebMvcMetricsFilter(MeterRegistry registry, WebMvcTagsProvider tagsProvider,
+			String metricName, AutoTimer autoTimer) {
 		this.registry = registry;
 		this.tagsProvider = tagsProvider;
 		this.metricName = metricName;
@@ -89,7 +89,8 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(HttpServletRequest request,
+			HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		TimingContext timingContext = TimingContext.get(request);
 		if (timingContext == null) {
@@ -118,34 +119,35 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 	}
 
 	private TimingContext startAndAttachTimingContext(HttpServletRequest request) {
-		Timer.Sample timerSample = Timer.start(new IntervalHttpServerEvent(new HttpServletRequestWrapper(request)) {
-			@Override
-			public String getLowCardinalityName() {
-				return "http";
-			}
-		}, this.registry);
-		TimingContext timingContext = new TimingContext(timerSample);
+		IntervalHttpServerEvent event = new IntervalHttpServerEvent(
+				new HttpServletRequestWrapper(request));
+		Timer.Sample timerSample = Timer.start(this.registry, event);
+		TimingContext timingContext = new TimingContext(timerSample, event);
 		timingContext.attachTo(request);
 		return timingContext;
 	}
 
 	private Throwable fetchException(HttpServletRequest request) {
-		Throwable exception = (Throwable) request.getAttribute(ErrorAttributes.ERROR_ATTRIBUTE);
+		Throwable exception = (Throwable) request
+				.getAttribute(ErrorAttributes.ERROR_ATTRIBUTE);
 		if (exception == null) {
-			exception = (Throwable) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+			exception = (Throwable) request
+					.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
 		}
 		return exception;
 	}
 
-	private void record(TimingContext timingContext, HttpServletRequest request, HttpServletResponse response,
-			Throwable exception) {
+	private void record(TimingContext timingContext, HttpServletRequest request,
+			HttpServletResponse response, Throwable exception) {
 		try {
 			Object handler = getHandler(request);
 			Set<Timed> annotations = getTimedAnnotations(handler);
 			Timer.Sample timerSample = timingContext.getTimerSample();
-			((IntervalHttpServerEvent) timerSample.getEvent()).setResponse(new HttpServletResponseWrapper(request, response, exception));
+			timingContext.getIntervalHttpServerEvent().setResponse(
+					new HttpServletResponseWrapper(request, response, exception));
 			AutoTimer.apply(this.autoTimer, this.metricName, annotations,
-					(builder) -> timerSample.stop(getTimer(builder, handler, request, response, exception)));
+					(builder) -> timerSample.stop(
+							getTimer(builder, handler, request, response, exception)));
 		}
 		catch (Exception ex) {
 			logger.warn("Failed to record timer metrics", ex);
@@ -160,14 +162,17 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 	private Set<Timed> getTimedAnnotations(Object handler) {
 		if (handler instanceof HandlerMethod) {
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
-			return TimedAnnotations.get(handlerMethod.getMethod(), handlerMethod.getBeanType());
+			return TimedAnnotations.get(handlerMethod.getMethod(),
+					handlerMethod.getBeanType());
 		}
 		return Collections.emptySet();
 	}
 
-	private Timer getTimer(Builder builder, Object handler, HttpServletRequest request, HttpServletResponse response,
-			Throwable exception) {
-		return builder.tags(this.tagsProvider.getTags(request, response, handler, exception)).register(this.registry);
+	private Timer getTimer(Builder builder, Object handler, HttpServletRequest request,
+			HttpServletResponse response, Throwable exception) {
+		return builder
+				.tags(this.tagsProvider.getTags(request, response, handler, exception))
+				.register(this.registry);
 	}
 
 	/**
@@ -180,12 +185,20 @@ public class WebMvcMetricsFilter extends OncePerRequestFilter {
 
 		private final Timer.Sample timerSample;
 
-		TimingContext(Sample timerSample) {
+		private final IntervalHttpServerEvent intervalHttpServerEvent;
+
+		TimingContext(Sample timerSample,
+				IntervalHttpServerEvent intervalHttpServerEvent) {
 			this.timerSample = timerSample;
+			this.intervalHttpServerEvent = intervalHttpServerEvent;
 		}
 
 		Timer.Sample getTimerSample() {
 			return this.timerSample;
+		}
+
+		IntervalHttpServerEvent getIntervalHttpServerEvent() {
+			return this.intervalHttpServerEvent;
 		}
 
 		void attachTo(HttpServletRequest request) {

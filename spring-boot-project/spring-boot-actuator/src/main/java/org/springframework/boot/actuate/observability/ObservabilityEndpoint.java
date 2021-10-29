@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
@@ -15,12 +18,6 @@ import org.springframework.boot.context.metrics.buffering.BufferingApplicationSt
 import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.core.log.LogAccessor;
 import org.springframework.core.metrics.StartupStep;
-
-import io.micrometer.core.event.interval.IntervalEvent;
-import io.micrometer.core.instrument.Cardinality;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-
 import org.springframework.util.StringUtils;
 
 import static java.util.stream.Collectors.toMap;
@@ -49,7 +46,8 @@ public class ObservabilityEndpoint {
 	 * @param applicationStartup the application startup
 	 * @param recorder recorder
 	 */
-	public ObservabilityEndpoint(BufferingApplicationStartup applicationStartup, MeterRegistry recorder) {
+	public ObservabilityEndpoint(BufferingApplicationStartup applicationStartup,
+			MeterRegistry recorder) {
 		this.applicationStartup = applicationStartup;
 		this.recorder = recorder;
 	}
@@ -66,10 +64,8 @@ public class ObservabilityEndpoint {
 		}
 
 		// this should be immutable
-		Map<Long, Node> stepMap = startupTimeline.getEvents().stream()
-				.map(Node::new)
+		Map<Long, Node> stepMap = startupTimeline.getEvents().stream().map(Node::new)
 				.collect(toMap(node -> node.startupStep.getId(), Function.identity()));
-
 
 		Node artificalRoot = new Node(new StartupStep() {
 			@Override
@@ -106,11 +102,13 @@ public class ObservabilityEndpoint {
 			public void end() {
 
 			}
-		}, toNanos(startupTimeline.getStartTime()), stepMap.entrySet().stream().max(Map.Entry.comparingByKey()).get().getValue().endTimeNanos);
+		}, toNanos(startupTimeline.getStartTime()), stepMap.entrySet().stream()
+				.max(Map.Entry.comparingByKey()).get().getValue().endTimeNanos);
 
 		for (Map.Entry<Long, Node> entry : stepMap.entrySet()) {
 			Node current = entry.getValue();
-			Node parent = stepMap.get(current.startupStep.getParentId() != null ? current.startupStep.getParentId() : artificalRoot);
+			Node parent = stepMap.get(current.startupStep.getParentId() != null
+					? current.startupStep.getParentId() : artificalRoot);
 			parent = parent != null ? parent : artificalRoot;
 			parent.children.add(current);
 		}
@@ -122,27 +120,29 @@ public class ObservabilityEndpoint {
 			return;
 		}
 		String name = node.startupStep.getName();
-		Timer.Sample recording = recorder.timer(nameFromEvent(name)).toSample(new IntervalEvent() {
-					@Override
-					public String getLowCardinalityName() {
-						return nameFromEvent(name);
-					}
-
-					@Override
-					public String getDescription() {
-						return "";
-					}
-				}).tag(io.micrometer.core.instrument.Tag.of("event", name, Cardinality.HIGH))
-				.start(node.startTimeNanos, node.startTimeNanos);
+		/*
+		 * Timer.Sample recording = recorder.timer(nameFromEvent(name)).toSample(new
+		 * IntervalEvent() {
+		 * 
+		 * @Override public String getLowCardinalityName() { return nameFromEvent(name); }
+		 * 
+		 * @Override public String getDescription() { return ""; }
+		 * }).tag(io.micrometer.core.instrument.Tag.of("event", name, Cardinality.HIGH))
+		 * .start(node.startTimeNanos, node.startTimeNanos);
+		 */
+		Timer.Sample recording = Timer.start(this.recorder);
+		// name = nameFromEvent(name);
 		StartupStep.Tags tags = node.startupStep.getTags();
 		if (tags != null) {
 			for (StartupStep.Tag tag : tags) {
 				String key = tag.getKey();
 				String value = tag.getValue();
 				if (key.equals("beanName") || key.equals("postProcessor")) {
-					recording.setHighCardinalityName(EventNameUtil.toLowerHyphen(name(value)));
+					// Retrieve this value from tags and set it as a name
+					// recording.setHighCardinalityName(EventNameUtil.toLowerHyphen(name(value)));
 				}
-				recording.tag(io.micrometer.core.instrument.Tag.of(EventNameUtil.toLowerHyphen(key), value, Cardinality.HIGH));
+				// recording.tag(io.micrometer.core.instrument.Tag.of(EventNameUtil.toLowerHyphen(key),
+				// value, Cardinality.HIGH));
 			}
 		}
 
@@ -151,7 +151,8 @@ public class ObservabilityEndpoint {
 		for (Node child : node.children) {
 			visit(child);
 		}
-		recording.stop(node.endTimeNanos);
+		// recording.stop(node.endTimeNanos);
+		recording.stop(Timer.builder(name).register(this.recorder));
 	}
 
 	// TODO: Check if nano calculation is fine
@@ -187,7 +188,6 @@ public class ObservabilityEndpoint {
 		}
 		return name;
 	}
-
 
 	@WriteOperation
 	public void observability() {

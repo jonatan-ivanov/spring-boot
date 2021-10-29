@@ -21,15 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.micrometer.core.event.listener.RecordingListener;
-import io.micrometer.core.event.listener.composite.AllMatchingCompositeRecordingListener;
-import io.micrometer.core.event.listener.composite.CompositeRecordingListener;
-import io.micrometer.core.event.listener.composite.FirstMatchingCompositeRecordingListener;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.listener.tracing.DefaultTracingRecordingListener;
-import io.micrometer.core.instrument.listener.tracing.HttpClientTracingRecordingListener;
-import io.micrometer.core.instrument.listener.tracing.HttpServerTracingRecordingListener;
-import io.micrometer.core.instrument.listener.tracing.TracingRecordingListener;
+import io.micrometer.core.instrument.TimerRecordingListener;
 import io.micrometer.core.instrument.tracing.Tracer;
 import io.micrometer.core.instrument.tracing.http.HttpClientHandler;
 import io.micrometer.core.instrument.tracing.http.HttpServerHandler;
@@ -38,6 +31,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.observability.tracing.listener.DefaultTracingRecordingListener;
+import org.springframework.boot.autoconfigure.observability.tracing.listener.HttpClientTracingRecordingListener;
+import org.springframework.boot.autoconfigure.observability.tracing.listener.HttpServerTracingRecordingListener;
+import org.springframework.boot.autoconfigure.observability.tracing.listener.TracingRecordingListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -45,34 +42,39 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 @Configuration(proxyBeanMethods = false)
+@SuppressWarnings({ "rawtypes", "unchecked" })
 class ObservabilityConfiguration {
-
 
 	@Bean
 	BeanPostProcessor listenerProvidingMeterRegistryCustomizer(BeanFactory beanFactory) {
 		return new BeanPostProcessor() {
 			@Override
-			public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+			public Object postProcessAfterInitialization(Object bean, String beanName)
+					throws BeansException {
 				if (bean instanceof MeterRegistry) {
-					((MeterRegistry) bean).config().recordingListener(beanFactory.getBean(CompositeRecordingListener.class));
+					((MeterRegistry) bean).config().timerRecordingListener(
+							beanFactory.getBean(CompositeRecordingListener.class));
 				}
 				return bean;
 			}
 		};
 	}
 
-
 	@Bean
 	@Primary
-	CompositeRecordingListener compositeRecordingListener(List<RecordingListener<?>> listeners) {
-		return new AllMatchingCompositeRecordingListener(listenersWithoutDuplicates(listeners));
+	CompositeRecordingListener compositeRecordingListener(
+			List<TimerRecordingListener<?>> listeners) {
+		return new AllMatchingCompositeRecordingListener(
+				listenersWithoutDuplicates(listeners));
 	}
 
-	private List<RecordingListener<?>> listenersWithoutDuplicates(List<RecordingListener<?>> listeners) {
-		Set<RecordingListener<?>> recordingListeners = new HashSet<>();
+	private List<TimerRecordingListener> listenersWithoutDuplicates(
+			List<TimerRecordingListener<?>> listeners) {
+		Set<TimerRecordingListener> recordingListeners = new HashSet<>();
 		listeners.forEach(recordingListener -> {
 			if (recordingListener instanceof CompositeRecordingListener) {
-				List<? extends RecordingListener<?>> compositeListeners = ((CompositeRecordingListener) recordingListener).getListeners();
+				List<? extends TimerRecordingListener> compositeListeners = ((CompositeRecordingListener) recordingListener)
+						.getListeners();
 				compositeListeners.forEach(recordingListeners::remove);
 			}
 			recordingListeners.add(recordingListener);
@@ -92,21 +94,23 @@ class ObservabilityConfiguration {
 
 		@Bean
 		@Order(value = Ordered.LOWEST_PRECEDENCE - 10)
-		HttpClientTracingRecordingListener httpClientTracingRecordingListener(Tracer tracer, HttpClientHandler httpClientHandler) {
+		HttpClientTracingRecordingListener httpClientTracingRecordingListener(
+				Tracer tracer, HttpClientHandler httpClientHandler) {
 			return new HttpClientTracingRecordingListener(tracer, httpClientHandler);
 		}
 
 		@Bean
 		@Order(value = Ordered.LOWEST_PRECEDENCE - 10)
-		HttpServerTracingRecordingListener httpServerTracingRecordingListener(Tracer tracer, HttpServerHandler httpServerHandler) {
+		HttpServerTracingRecordingListener httpServerTracingRecordingListener(
+				Tracer tracer, HttpServerHandler httpServerHandler) {
 			return new HttpServerTracingRecordingListener(tracer, httpServerHandler);
 		}
 
 		@Bean
-		FirstMatchingCompositeRecordingListener tracingFirstMatchingRecordingListeners(List<TracingRecordingListener> tracingRecordingListeners) {
+		FirstMatchingCompositeRecordingListener tracingFirstMatchingRecordingListeners(
+				List<TracingRecordingListener> tracingRecordingListeners) {
 			return new FirstMatchingCompositeRecordingListener(tracingRecordingListeners);
 		}
 	}
 
 }
-

@@ -23,11 +23,10 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import io.micrometer.core.event.interval.IntervalHttpClientEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.tracing.context.IntervalHttpClientEvent;
 import io.micrometer.core.instrument.transport.http.HttpClientRequest;
 import io.micrometer.core.instrument.transport.http.HttpClientResponse;
 import org.apache.commons.logging.Log;
@@ -42,7 +41,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.servlet.mvc.observability.HttpServletRequestWrapper;
 import org.springframework.web.util.UriTemplateHandler;
 
 /**
@@ -54,7 +52,8 @@ import org.springframework.web.util.UriTemplateHandler;
  */
 class MetricsClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
 
-	private static final Log logger = LogFactory.getLog(MetricsClientHttpRequestInterceptor.class);
+	private static final Log logger = LogFactory
+			.getLog(MetricsClientHttpRequestInterceptor.class);
 
 	private static final ThreadLocal<Deque<String>> urlTemplate = new UrlTemplateThreadLocal();
 
@@ -74,8 +73,9 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 	 * @param autoTimer the auto-timers to apply or {@code null} to disable auto-timing
 	 * @since 2.2.0
 	 */
-	MetricsClientHttpRequestInterceptor(MeterRegistry meterRegistry, RestTemplateExchangeTagsProvider tagProvider,
-			String metricName, AutoTimer autoTimer) {
+	MetricsClientHttpRequestInterceptor(MeterRegistry meterRegistry,
+			RestTemplateExchangeTagsProvider tagProvider, String metricName,
+			AutoTimer autoTimer) {
 		this.tagProvider = tagProvider;
 		this.meterRegistry = meterRegistry;
 		this.metricName = metricName;
@@ -83,26 +83,20 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 	}
 
 	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-			throws IOException {
+	public ClientHttpResponse intercept(HttpRequest request, byte[] body,
+			ClientHttpRequestExecution execution) throws IOException {
 		if (!enabled()) {
 			return execution.execute(request, body);
 		}
 		HttpRequestWrapper requestWrapper = new HttpRequestWrapper(request);
-		IntervalHttpClientEvent event = new IntervalHttpClientEvent(requestWrapper) {
-			@Override
-			public String getLowCardinalityName() {
-				return metricName;
-			}
-		};
-		Timer.Sample sample = this.autoTimer.builder(this.metricName)
+		IntervalHttpClientEvent event = new IntervalHttpClientEvent(requestWrapper);
+		Timer timer = this.autoTimer.builder(this.metricName)
 				.description("Timer of RestTemplate operation")
-				.register(this.meterRegistry)
-				.toSample(event);
+				.register(this.meterRegistry);
+		Timer.Sample sample = Timer.start(this.meterRegistry);
 		ClientHttpResponse response = null;
 		Throwable error = null;
 		try {
-			sample.start();
 			response = execution.execute(request, body);
 			return response;
 		}
@@ -113,8 +107,9 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 		}
 		finally {
 			try {
-				event.setResponse(new ClientHttpResponseWrapper(requestWrapper, response, error));
-				sample.stop();
+				event.setResponse(
+						new ClientHttpResponseWrapper(requestWrapper, response, error));
+				sample.stop(timer);
 			}
 			catch (Exception ex) {
 				logger.info("Failed to record metrics.", ex);
@@ -131,7 +126,8 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 
 	UriTemplateHandler createUriTemplateHandler(UriTemplateHandler delegate) {
 		if (delegate instanceof RootUriTemplateHandler) {
-			return ((RootUriTemplateHandler) delegate).withHandlerWrapper(CapturingUriTemplateHandler::new);
+			return ((RootUriTemplateHandler) delegate)
+					.withHandlerWrapper(CapturingUriTemplateHandler::new);
 		}
 		return new CapturingUriTemplateHandler(delegate);
 	}
@@ -162,7 +158,8 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 
 	}
 
-	private static final class UrlTemplateThreadLocal extends NamedThreadLocal<Deque<String>> {
+	private static final class UrlTemplateThreadLocal
+			extends NamedThreadLocal<Deque<String>> {
 
 		private UrlTemplateThreadLocal() {
 			super("Rest Template URL Template");
@@ -231,8 +228,8 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 		@Nullable
 		final Throwable error;
 
-		ClientHttpResponseWrapper(HttpRequestWrapper request, @Nullable ClientHttpResponse response,
-				@Nullable Throwable error) {
+		ClientHttpResponseWrapper(HttpRequestWrapper request,
+				@Nullable ClientHttpResponse response, @Nullable Throwable error) {
 			this.request = request;
 			this.response = response;
 			this.error = error;
@@ -245,7 +242,8 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 
 		@Override
 		public Collection<String> headerNames() {
-			return this.response != null ? this.response.getHeaders().keySet() : Collections.emptyList();
+			return this.response != null ? this.response.getHeaders().keySet()
+					: Collections.emptyList();
 		}
 
 		@Override
