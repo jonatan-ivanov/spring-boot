@@ -93,7 +93,7 @@ class MetricsClientHttpRequestInterceptor implements ClientHttpRequestIntercepto
 		Timer timer = this.autoTimer.builder(this.metricName)
 				.description("Timer of RestTemplate operation")
 				.register(this.meterRegistry);
-		Timer.Sample sample = Timer.start(this.meterRegistry);
+		Timer.Sample sample = Timer.start(this.meterRegistry, event);
 		ClientHttpResponse response = null;
 		Throwable error = null;
 		try {

@@ -84,7 +84,12 @@ public interface TracingRecordingListener<T extends IntervalHttpEvent>
 	// @Nullable
 	default TracingContext getTracingContext(Timer.Sample sample) {
 		// maybe consider returning a null ?
-		return tracingContext.getOrDefault(sample, new TracingContext());
+		TracingContext ctx = tracingContext.get(sample);
+		if (ctx == null) {
+			ctx = new TracingContext();
+			tracingContext.put(sample, ctx);
+		}
+		return ctx;
 	}
 
 	@Nullable
