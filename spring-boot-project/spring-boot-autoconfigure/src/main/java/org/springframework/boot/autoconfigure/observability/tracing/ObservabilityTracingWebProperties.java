@@ -30,7 +30,7 @@ import org.springframework.core.Ordered;
 public class ObservabilityTracingWebProperties {
 
 	/**
-	 * If you register your filter before the {@link TraceWebFilter} then you will not
+	 * If you register your filter before the TraceWebFilter then you will not
 	 * have the tracing context passed for you out of the box. That means that e.g. your
 	 * logs will not get correlated.
 	 */

@@ -23,9 +23,6 @@ import org.springframework.util.StringUtils;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * {@link Endpoint @Endpoint} to expose and report the timeline of the
- * {@link org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup
- * application startup} as {@link io.micrometer.core.instrument.event.Recording}.
  *
  * @author Brian Clozel
  * @author Chris Bono

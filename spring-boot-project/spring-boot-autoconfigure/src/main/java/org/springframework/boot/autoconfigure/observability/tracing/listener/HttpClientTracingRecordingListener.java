@@ -24,7 +24,7 @@ import io.micrometer.core.instrument.transport.http.HttpClientRequest;
 import io.micrometer.core.instrument.transport.http.HttpClientResponse;
 
 /**
- * {@link RecordingListener} that uses the Tracing API to record events for HTTP client
+ * TracingRecordingListener that uses the Tracing API to record events for HTTP client
  * side.
  *
  * @author Marcin Grzejszczak
@@ -45,8 +45,8 @@ public class HttpClientTracingRecordingListener extends
 	}
 
 	@Override
-	public boolean supportsContext(Timer.Context ctx) {
-		return ctx instanceof IntervalHttpClientEvent;
+	public boolean supportsContext(Timer.Context context) {
+		return context != null && context.getClass().isAssignableFrom(IntervalHttpClientEvent.class);
 	}
 
 	@Override
@@ -65,5 +65,6 @@ public class HttpClientTracingRecordingListener extends
 		IntervalHttpClientEvent clientEvent = event;
 		return clientEvent.getResponse();
 	}
+
 
 }

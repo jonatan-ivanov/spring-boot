@@ -78,6 +78,11 @@ abstract class HttpTracingRecordingListener<CTX extends IntervalHttpEvent, REQ e
 	}
 
 	@Override
+	public boolean supportsContext(Timer.Context context) {
+		return context != null && context.getClass().isAssignableFrom(IntervalHttpEvent.class);
+	}
+
+	@Override
 	public Tracer getTracer() {
 		return this.tracer;
 	}

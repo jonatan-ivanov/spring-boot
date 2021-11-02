@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * Annotate a client {@link org.springframework.cloud.sleuth.http.HttpRequestParser}.
+ * Annotate a client org.springframework.cloud.sleuth.http.HttpRequestParser.
  *
  * @see Qualifier
  * @since 2.2.2

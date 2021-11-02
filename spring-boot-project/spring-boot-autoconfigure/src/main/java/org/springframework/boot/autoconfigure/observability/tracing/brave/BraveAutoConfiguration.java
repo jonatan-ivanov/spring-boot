@@ -35,7 +35,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.observability.ObservabilityAutoConfiguration;
-import org.springframework.boot.autoconfigure.observability.tracing.ObservabilityTracingAnnotationConfiguration;
 import org.springframework.boot.autoconfigure.observability.tracing.ObservabilityTracingBaggageProperties;
 import org.springframework.boot.autoconfigure.observability.tracing.ObservabilityTracingSpanFilterProperties;
 import org.springframework.boot.autoconfigure.observability.tracing.ObservabilityTracingTracerProperties;
@@ -68,7 +67,7 @@ import org.springframework.util.StringUtils;
 @EnableConfigurationProperties({ ObservabilityTracingProperties.class, ObservabilityTracingSpanFilterProperties.class,
 		ObservabilityTracingBaggageProperties.class, ObservabilityTracingTracerProperties.class, ObservabilityTracingBaggageProperties.class })
 @Import({ BraveBridgeConfiguration.class, BraveBaggageConfiguration.class, BraveSamplerConfiguration.class,
-		BraveHttpConfiguration.class, TraceConfiguration.class, ObservabilityTracingAnnotationConfiguration.class })
+		BraveHttpConfiguration.class, TraceConfiguration.class })
 public class BraveAutoConfiguration {
 
 	/**

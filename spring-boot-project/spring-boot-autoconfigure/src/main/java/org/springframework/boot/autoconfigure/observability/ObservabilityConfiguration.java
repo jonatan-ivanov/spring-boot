@@ -16,11 +16,6 @@
 
 package org.springframework.boot.autoconfigure.observability;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.TimerRecordingListener;
 import io.micrometer.core.instrument.tracing.Tracer;
@@ -29,15 +24,14 @@ import io.micrometer.core.instrument.tracing.http.HttpServerHandler;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.observability.tracing.listener.DefaultTracingRecordingListener;
 import org.springframework.boot.autoconfigure.observability.tracing.listener.HttpClientTracingRecordingListener;
 import org.springframework.boot.autoconfigure.observability.tracing.listener.HttpServerTracingRecordingListener;
-import org.springframework.boot.autoconfigure.observability.tracing.listener.TracingRecordingListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
@@ -46,40 +40,18 @@ import org.springframework.core.annotation.Order;
 class ObservabilityConfiguration {
 
 	@Bean
-	BeanPostProcessor listenerProvidingMeterRegistryCustomizer(BeanFactory beanFactory) {
+	BeanPostProcessor listenerProvidingMeterRegistryCustomizer(ListableBeanFactory beanFactory) {
 		return new BeanPostProcessor() {
 			@Override
 			public Object postProcessAfterInitialization(Object bean, String beanName)
 					throws BeansException {
 				if (bean instanceof MeterRegistry) {
-					((MeterRegistry) bean).config().timerRecordingListener(
-							beanFactory.getBean(CompositeRecordingListener.class));
+					beanFactory.getBeansOfType(TimerRecordingListener.class).values().stream()
+							.forEach(listener -> ((MeterRegistry) bean).config().timerRecordingListener(listener));
 				}
 				return bean;
 			}
 		};
-	}
-
-	@Bean
-	@Primary
-	CompositeRecordingListener compositeRecordingListener(
-			List<TimerRecordingListener<?>> listeners) {
-		return new AllMatchingCompositeRecordingListener(
-				listenersWithoutDuplicates(listeners));
-	}
-
-	private List<TimerRecordingListener> listenersWithoutDuplicates(
-			List<TimerRecordingListener<?>> listeners) {
-		Set<TimerRecordingListener> recordingListeners = new HashSet<>();
-		listeners.forEach(recordingListener -> {
-			if (recordingListener instanceof CompositeRecordingListener) {
-				List<? extends TimerRecordingListener> compositeListeners = ((CompositeRecordingListener) recordingListener)
-						.getListeners();
-				compositeListeners.forEach(recordingListeners::remove);
-			}
-			recordingListeners.add(recordingListener);
-		});
-		return new ArrayList<>(recordingListeners);
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -104,12 +76,6 @@ class ObservabilityConfiguration {
 		HttpServerTracingRecordingListener httpServerTracingRecordingListener(
 				Tracer tracer, HttpServerHandler httpServerHandler) {
 			return new HttpServerTracingRecordingListener(tracer, httpServerHandler);
-		}
-
-		@Bean
-		FirstMatchingCompositeRecordingListener tracingFirstMatchingRecordingListeners(
-				List<TracingRecordingListener> tracingRecordingListeners) {
-			return new FirstMatchingCompositeRecordingListener(tracingRecordingListeners);
 		}
 	}
 

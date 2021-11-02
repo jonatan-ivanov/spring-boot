@@ -25,7 +25,7 @@ import io.micrometer.core.instrument.tracing.Tracer;
 import io.micrometer.core.instrument.tracing.internal.SpanNameUtil;
 
 /**
- * {@link RecordingListener} that uses the Tracing API to record events.
+ * TracingRecordingListener that uses the Tracing API to record events.
  *
  * @author Marcin Grzejszczak
  * @since 6.0.0

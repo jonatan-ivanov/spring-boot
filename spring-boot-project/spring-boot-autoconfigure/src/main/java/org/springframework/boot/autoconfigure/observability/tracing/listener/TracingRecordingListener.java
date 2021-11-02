@@ -36,8 +36,7 @@ import org.springframework.lang.Nullable;
  * @since 6.0.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public interface TracingRecordingListener<T extends IntervalHttpEvent>
-		extends TimerRecordingListener<T> {
+public interface TracingRecordingListener<T extends Timer.Context> extends TimerRecordingListener<T> {
 
 	Map<Timer.Sample, TracingContext> tracingContext = new ConcurrentHashMap<>();
 

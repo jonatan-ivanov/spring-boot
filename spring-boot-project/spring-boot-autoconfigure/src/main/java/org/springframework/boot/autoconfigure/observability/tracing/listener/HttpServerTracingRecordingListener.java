@@ -16,6 +16,7 @@
 
 package org.springframework.boot.autoconfigure.observability.tracing.listener;
 
+import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.tracing.Tracer;
 import io.micrometer.core.instrument.tracing.context.IntervalHttpServerEvent;
 import io.micrometer.core.instrument.tracing.http.HttpServerHandler;
@@ -24,7 +25,7 @@ import io.micrometer.core.instrument.transport.http.HttpServerRequest;
 import io.micrometer.core.instrument.transport.http.HttpServerResponse;
 
 /**
- * {@link RecordingListener} that uses the Tracing API to record events for HTTP server
+ * TracingRecordingListener that uses the Tracing API to record events for HTTP server
  * side.
  *
  * @author Marcin Grzejszczak
@@ -57,6 +58,11 @@ public class HttpServerTracingRecordingListener extends
 			return spanNameFromRoute(serverEvent.getResponse());
 		}
 		return serverEvent.getRequest().method();
+	}
+
+	@Override
+	public boolean supportsContext(Timer.Context context) {
+		return context != null && context.getClass().isAssignableFrom(IntervalHttpServerEvent.class);
 	}
 
 	// taken from Brave
