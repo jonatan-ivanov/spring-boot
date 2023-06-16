@@ -17,6 +17,7 @@
 package org.springframework.boot.actuate.autoconfigure.observation;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -116,8 +117,21 @@ public class ObservationProperties {
 
 			private final ServerRequests requests = new ServerRequests();
 
+			/**
+			 * List of path prefixes in the url whose observations should be ignored.
+			 */
+			private List<String> ignoredPaths = List.of();
+
 			public ServerRequests getRequests() {
 				return this.requests;
+			}
+
+			public List<String> getIgnoredPaths() {
+				return this.ignoredPaths;
+			}
+
+			public void setIgnoredPaths(List<String> ignoredPaths) {
+				this.ignoredPaths = ignoredPaths;
 			}
 
 			public static class ServerRequests {
